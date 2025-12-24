@@ -5,23 +5,35 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { 
   X, 
   Type, 
   Image, 
   Palette, 
   Settings2,
-  ChevronDown
+  ChevronDown,
+  Layout
 } from 'lucide-react';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { getVariantsForSection } from '@/lib/sectionVariants';
 
 export function PropertiesPanel() {
   const { state, selectedSection, updateSection, updateSectionStyles, selectSection } = useBuilder();
   const [contentOpen, setContentOpen] = React.useState(true);
   const [stylesOpen, setStylesOpen] = React.useState(true);
+  const [layoutOpen, setLayoutOpen] = React.useState(true);
+
+  const variants = selectedSection ? getVariantsForSection(selectedSection.type) : [];
 
   if (!selectedSection) {
     return (
@@ -159,6 +171,59 @@ export function PropertiesPanel() {
 
       {/* Properties */}
       <div className="flex-1 overflow-y-auto scrollbar-thin">
+        {/* Layout/Variant Section */}
+        {variants.length > 0 && (
+          <Collapsible open={layoutOpen} onOpenChange={setLayoutOpen} className="border-b border-border">
+            <CollapsibleTrigger className="w-full p-4 flex items-center justify-between hover:bg-secondary/50 transition-colors">
+              <div className="flex items-center gap-2">
+                <Layout className="w-4 h-4 text-emerald-500" />
+                <span className="text-sm font-medium">Layout Variant</span>
+              </div>
+              <ChevronDown className={`w-4 h-4 transition-transform ${layoutOpen ? 'rotate-180' : ''}`} />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="p-4 pt-0 space-y-4">
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Choose Layout Style</Label>
+                <Select
+                  value={selectedSection.variant || variants[0]?.id}
+                  onValueChange={(value) => updateSection(selectedSection.id, { variant: value })}
+                >
+                  <SelectTrigger className="bg-secondary border-border">
+                    <SelectValue placeholder="Select variant" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {variants.map((variant) => (
+                      <SelectItem key={variant.id} value={variant.id}>
+                        <div className="flex flex-col">
+                          <span>{variant.name}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Variant Preview Cards */}
+              <div className="grid grid-cols-2 gap-2">
+                {variants.map((variant) => (
+                  <button
+                    key={variant.id}
+                    onClick={() => updateSection(selectedSection.id, { variant: variant.id })}
+                    className={`p-3 rounded-lg border text-left transition-all ${
+                      (selectedSection.variant || variants[0]?.id) === variant.id
+                        ? 'border-primary bg-primary/10'
+                        : 'border-border hover:border-muted-foreground/50'
+                    }`}
+                  >
+                    <div className="text-xs font-medium">{variant.name}</div>
+                    <div className="text-xs text-muted-foreground mt-1 line-clamp-2">{variant.description}</div>
+                  </button>
+                ))}
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        )}
+
         {/* Content Section */}
         <Collapsible open={contentOpen} onOpenChange={setContentOpen} className="border-b border-border">
           <CollapsibleTrigger className="w-full p-4 flex items-center justify-between hover:bg-secondary/50 transition-colors">

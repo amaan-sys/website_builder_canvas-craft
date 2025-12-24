@@ -1,0 +1,113 @@
+import React from 'react';
+import { BuilderSection } from '@/types/builder';
+import { ArrowUpRight } from 'lucide-react';
+
+interface ServicesSectionProps {
+  section: BuilderSection;
+  isSelected: boolean;
+  isEditing: boolean;
+  onContentChange?: (field: string, value: any) => void;
+}
+
+export function ServicesSection({ section, isSelected, isEditing, onContentChange }: ServicesSectionProps) {
+  const { content, styles } = section;
+
+  const handleTextEdit = (field: string, e: React.FocusEvent<HTMLElement>) => {
+    if (onContentChange && isEditing) {
+      onContentChange(field, e.currentTarget.textContent || '');
+    }
+  };
+
+  const sectionStyle: React.CSSProperties = {
+    background: styles.backgroundGradient || styles.backgroundColor,
+    padding: styles.padding,
+  };
+
+  return (
+    <section 
+      className={`relative transition-all duration-300 ${
+        isSelected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''
+      }`}
+      style={sectionStyle}
+    >
+      <div className="container mx-auto px-6">
+        {/* Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
+            style={{ color: '#0f172a' }}
+            contentEditable={isEditing}
+            suppressContentEditableWarning
+            onBlur={(e) => handleTextEdit('headline', e)}
+          >
+            {content.headline}
+          </h2>
+          <p 
+            className="text-lg opacity-70"
+            style={{ color: '#475569' }}
+            contentEditable={isEditing}
+            suppressContentEditableWarning
+            onBlur={(e) => handleTextEdit('subheadline', e)}
+          >
+            {content.subheadline}
+          </p>
+        </div>
+
+        {/* Services Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {content.services?.map((service: any, index: number) => (
+            <div 
+              key={service.id}
+              className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:-translate-y-2"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              {/* Image */}
+              <div className="relative h-64 overflow-hidden">
+                <img 
+                  src={service.imageUrl}
+                  alt={service.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              </div>
+
+              {/* Content Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <h3 
+                  className="text-2xl font-bold mb-2"
+                  contentEditable={isEditing}
+                  suppressContentEditableWarning
+                >
+                  {service.title}
+                </h3>
+                <p 
+                  className="opacity-80 mb-4 line-clamp-2"
+                  contentEditable={isEditing}
+                  suppressContentEditableWarning
+                >
+                  {service.description}
+                </p>
+                
+                <a 
+                  href={service.link}
+                  className="inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:text-primary"
+                >
+                  Learn More 
+                  <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                </a>
+              </div>
+
+              {/* Corner Accent */}
+              <div 
+                className="absolute top-4 right-4 w-12 h-12 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)' }}
+              >
+                <ArrowUpRight className="w-5 h-5 text-white" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

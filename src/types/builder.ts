@@ -55,6 +55,15 @@ export interface BuilderComponent {
   children?: BuilderComponent[];
 }
 
+export type HeroVariant = 'split' | 'centered' | 'video' | 'minimal' | 'gradient';
+export type FeaturesVariant = 'grid' | 'list' | 'cards' | 'icons';
+export type CTAVariant = 'simple' | 'split' | 'banner' | 'floating';
+export type TestimonialsVariant = 'cards' | 'carousel' | 'quote' | 'minimal';
+export type PricingVariant = 'cards' | 'table' | 'toggle';
+export type GalleryVariant = 'grid' | 'masonry' | 'carousel';
+
+export type SectionVariant = HeroVariant | FeaturesVariant | CTAVariant | TestimonialsVariant | PricingVariant | GalleryVariant | string;
+
 export interface SectionStyles {
   backgroundColor?: string;
   backgroundImage?: string;
@@ -67,6 +76,7 @@ export interface SectionStyles {
 export interface BuilderSection {
   id: string;
   type: SectionType;
+  variant?: SectionVariant;
   name: string;
   visible: boolean;
   locked: boolean;

@@ -1,17 +1,20 @@
 import { v4 as uuidv4 } from 'uuid';
 import { PageSchema, BuilderSection, NavbarConfig, FooterConfig } from '@/types/builder';
 
-export const createDefaultHeroSection = (): BuilderSection => ({
+export const createDefaultHeroSection = (variant: string = 'split'): BuilderSection => ({
   id: uuidv4(),
   type: 'hero',
+  variant,
   name: 'Hero Section',
   visible: true,
   locked: false,
   styles: {
     backgroundColor: '#0f172a',
-    backgroundGradient: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
-    padding: '120px 0',
-    minHeight: '90vh',
+    backgroundGradient: variant === 'gradient' 
+      ? 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)' 
+      : 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
+    padding: variant === 'minimal' ? '60px 0' : '120px 0',
+    minHeight: variant === 'minimal' ? '60vh' : '90vh',
   },
   content: {
     headline: 'Build Beautiful Websites Without Code',
@@ -19,13 +22,15 @@ export const createDefaultHeroSection = (): BuilderSection => ({
     ctaText: 'Get Started Free',
     ctaSecondaryText: 'Watch Demo',
     imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
   },
   components: [],
 });
 
-export const createDefaultFeaturesSection = (): BuilderSection => ({
+export const createDefaultFeaturesSection = (variant: string = 'grid'): BuilderSection => ({
   id: uuidv4(),
   type: 'features',
+  variant,
   name: 'Features Section',
   visible: true,
   locked: false,
@@ -70,15 +75,18 @@ export const createDefaultServicesSection = (): BuilderSection => ({
   components: [],
 });
 
-export const createDefaultCTASection = (): BuilderSection => ({
+export const createDefaultCTASection = (variant: string = 'simple'): BuilderSection => ({
   id: uuidv4(),
   type: 'cta',
+  variant,
   name: 'Call to Action',
   visible: true,
   locked: false,
   styles: {
-    backgroundGradient: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
-    padding: '80px 0',
+    backgroundGradient: variant === 'banner' 
+      ? 'linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%)'
+      : 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+    padding: variant === 'floating' ? '40px 0' : '80px 0',
   },
   content: {
     headline: 'Ready to Get Started?',

@@ -22,6 +22,10 @@ export type SectionType =
   | 'gallery'
   | 'pricing'
   | 'contact'
+  | 'stats'
+  | 'team'
+  | 'faq'
+  | 'logocloud'
   | 'custom';
 
 export type NavbarStyle = 'minimal' | 'centered' | 'split' | 'transparent';

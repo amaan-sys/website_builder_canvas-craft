@@ -13,7 +13,14 @@ import {
   Sparkles,
   Grid3X3,
   Image,
-  MessageSquare
+  MessageSquare,
+  BarChart2,
+  Users,
+  HelpCircle,
+  Building2,
+  DollarSign,
+  Mail,
+  Quote
 } from 'lucide-react';
 import { SectionType } from '@/types/builder';
 
@@ -31,10 +38,14 @@ const sectionIcons: Record<SectionType, React.ElementType> = {
   features: Grid3X3,
   services: Layout,
   cta: MessageSquare,
-  testimonials: MessageSquare,
+  testimonials: Quote,
   gallery: Image,
-  pricing: Grid3X3,
-  contact: MessageSquare,
+  pricing: DollarSign,
+  contact: Mail,
+  stats: BarChart2,
+  team: Users,
+  faq: HelpCircle,
+  logocloud: Building2,
   custom: Layout,
 };
 
@@ -47,6 +58,10 @@ const sectionColors: Record<SectionType, string> = {
   gallery: 'from-cyan-500 to-cyan-600',
   pricing: 'from-indigo-500 to-indigo-600',
   contact: 'from-rose-500 to-rose-600',
+  stats: 'from-teal-500 to-teal-600',
+  team: 'from-orange-500 to-orange-600',
+  faq: 'from-violet-500 to-violet-600',
+  logocloud: 'from-slate-500 to-slate-600',
   custom: 'from-gray-500 to-gray-600',
 };
 

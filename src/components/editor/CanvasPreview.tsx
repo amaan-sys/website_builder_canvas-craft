@@ -40,7 +40,7 @@ export function CanvasPreview({ viewport }: CanvasPreviewProps) {
 
   return (
     <div 
-      className="flex-1 overflow-auto p-8 scrollbar-thin"
+      className="h-full overflow-y-auto p-8 scrollbar-thin"
       style={{ backgroundColor: 'hsl(var(--builder-panel))' }}
       onClick={handleCanvasClick}
     >

@@ -1,0 +1,97 @@
+import React from 'react';
+import { Check, Sparkles } from 'lucide-react';
+
+export function PricingSection({ section, isSelected, isEditing, onContentChange }) {
+  const { content, styles } = section;
+  const plans = content.plans || [];
+
+  return (
+    <section
+      className="relative"
+      style={{
+        background: styles.backgroundGradient || styles.backgroundColor || '#f8fafc',
+        padding: styles.padding || '100px 0',
+      }}
+    >
+      <div className="container mx-auto px-6 max-w-7xl">
+        {/* Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 
+            className="text-4xl md:text-5xl font-bold mb-6"
+            style={{ color: '#0f172a' }}
+            contentEditable={isEditing}
+            suppressContentEditableWarning
+            onBlur={(e) => onContentChange?.('headline', e.currentTarget.textContent)}
+          >
+            {content.headline || 'Simple, Transparent Pricing'}
+          </h2>
+          <p 
+            className="text-lg opacity-80"
+            style={{ color: '#64748b' }}
+            contentEditable={isEditing}
+            suppressContentEditableWarning
+            onBlur={(e) => onContentChange?.('subheadline', e.currentTarget.textContent)}
+          >
+            {content.subheadline || 'Choose the plan that works best for you'}
+          </p>
+        </div>
+
+        {/* Pricing Grid */}
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {plans.map((plan, index) => (
+            <div
+              key={plan.id || index}
+              className={`relative rounded-3xl p-8 transition-all duration-300 ${
+                plan.popular
+                  ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-2xl scale-105 z-10'
+                  : 'bg-white border border-slate-200 hover:border-blue-200 hover:shadow-xl'
+              }`}
+            >
+              {plan.popular && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-sm font-medium rounded-full flex items-center gap-1">
+                  <Sparkles className="w-4 h-4" />
+                  Most Popular
+                </div>
+              )}
+              <div className="text-center mb-8">
+                <h3 className={`text-xl font-bold mb-2 ${plan.popular ? 'text-white' : 'text-slate-900'}`}>
+                  {plan.name}
+                </h3>
+                <p className={`text-sm mb-4 ${plan.popular ? 'text-white/80' : 'text-slate-500'}`}>
+                  {plan.description}
+                </p>
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className={`text-5xl font-bold ${plan.popular ? 'text-white' : 'text-slate-900'}`}>
+                    ${plan.price}
+                  </span>
+                  <span className={plan.popular ? 'text-white/70' : 'text-slate-400'}>/month</span>
+                </div>
+              </div>
+              <ul className="space-y-4 mb-8">
+                {(plan.features || []).map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3">
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                      plan.popular ? 'bg-white/20' : 'bg-green-100'
+                    }`}>
+                      <Check className={`w-3 h-3 ${plan.popular ? 'text-white' : 'text-green-600'}`} />
+                    </div>
+                    <span className={plan.popular ? 'text-white/90' : 'text-slate-600'}>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <button
+                className={`w-full py-4 rounded-xl font-semibold transition-all duration-200 ${
+                  plan.popular
+                    ? 'bg-white text-blue-600 hover:bg-slate-100'
+                    : 'bg-slate-900 text-white hover:bg-slate-800'
+                }`}
+              >
+                {plan.ctaText || 'Get Started'}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

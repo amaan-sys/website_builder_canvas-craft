@@ -1,26 +1,19 @@
-import React from 'react';
-import { NavbarConfig } from '@/types/builder';
+import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
 
-interface NavbarPreviewProps {
-  config: NavbarConfig;
-  isEditing: boolean;
-  onUpdate?: (updates: Partial<NavbarConfig>) => void;
-}
-
-export function NavbarPreview({ config, isEditing, onUpdate }: NavbarPreviewProps) {
+export function NavbarPreview({ config, isEditing, onUpdate }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navStyle: React.CSSProperties = {
-    backgroundColor: config.styles.backgroundColor === 'transparent' 
-      ? 'rgba(15, 23, 42, 0.8)' 
-      : config.styles.backgroundColor,
+  const navStyle = {
+    backgroundColor:
+      config.styles.backgroundColor === 'transparent'
+        ? 'rgba(15, 23, 42, 0.8)'
+        : config.styles.backgroundColor,
     color: config.styles.textColor,
   };
 
   return (
-    <nav 
+    <nav
       className={`${config.styles.sticky ? 'sticky top-0' : 'relative'} z-50 backdrop-blur-md`}
       style={navStyle}
     >
@@ -31,7 +24,7 @@ export function NavbarPreview({ config, isEditing, onUpdate }: NavbarPreviewProp
             {config.logo.imageUrl ? (
               <img src={config.logo.imageUrl} alt="Logo" className="h-10" />
             ) : (
-              <span 
+              <span
                 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
                 contentEditable={isEditing}
                 suppressContentEditableWarning
@@ -43,15 +36,15 @@ export function NavbarPreview({ config, isEditing, onUpdate }: NavbarPreviewProp
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {config.links.map((link) => (
+            {config.links.map((link) =>
               link.isButton ? (
                 <a
                   key={link.id}
                   href={link.href}
                   className="px-6 py-2.5 rounded-lg font-medium transition-all duration-300 hover:shadow-glow"
-                  style={{ 
+                  style={{
                     background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
-                    color: '#ffffff'
+                    color: '#ffffff',
                   }}
                 >
                   {link.label}
@@ -66,7 +59,7 @@ export function NavbarPreview({ config, isEditing, onUpdate }: NavbarPreviewProp
                   {link.label}
                 </a>
               )
-            ))}
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -74,7 +67,11 @@ export function NavbarPreview({ config, isEditing, onUpdate }: NavbarPreviewProp
             className="md:hidden p-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
 
@@ -86,11 +83,18 @@ export function NavbarPreview({ config, isEditing, onUpdate }: NavbarPreviewProp
                 <a
                   key={link.id}
                   href={link.href}
-                  className={`font-medium py-2 ${link.isButton ? 'px-6 py-2.5 rounded-lg text-center' : ''}`}
-                  style={link.isButton ? { 
-                    background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
-                    color: '#ffffff'
-                  } : { color: config.styles.textColor }}
+                  className={`font-medium py-2 ${
+                    link.isButton ? 'px-6 py-2.5 rounded-lg text-center' : ''
+                  }`}
+                  style={
+                    link.isButton
+                      ? {
+                          background:
+                            'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+                          color: '#ffffff',
+                        }
+                      : { color: config.styles.textColor }
+                  }
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.label}

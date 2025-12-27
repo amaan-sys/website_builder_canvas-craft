@@ -1,13 +1,6 @@
 // Section variant configurations for the builder
 
-export interface VariantOption {
-  id: string;
-  name: string;
-  description: string;
-  thumbnail?: string;
-}
-
-export const sectionVariants: Record<string, VariantOption[]> = {
+export const sectionVariants = {
   hero: [
     { id: 'split', name: 'Split Layout', description: 'Content on left, image on right' },
     { id: 'centered', name: 'Centered', description: 'Centered content with image below' },
@@ -75,11 +68,11 @@ export const sectionVariants: Record<string, VariantOption[]> = {
   ],
 };
 
-export function getVariantsForSection(sectionType: string): VariantOption[] {
+export function getVariantsForSection(sectionType) {
   return sectionVariants[sectionType] || [];
 }
 
-export function getDefaultVariant(sectionType: string): string {
+export function getDefaultVariant(sectionType) {
   const variants = sectionVariants[sectionType];
   return variants?.[0]?.id || 'default';
 }

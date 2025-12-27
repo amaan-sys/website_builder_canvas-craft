@@ -1,24 +1,16 @@
 import React from 'react';
-import { BuilderSection } from '@/types/builder';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
-interface CTASectionProps {
-  section: BuilderSection;
-  isSelected: boolean;
-  isEditing: boolean;
-  onContentChange?: (field: string, value: any) => void;
-}
-
-export function CTASection({ section, isSelected, isEditing, onContentChange }: CTASectionProps) {
+export function CTASection({ section, isSelected, isEditing, onContentChange }) {
   const { content, styles } = section;
 
-  const handleTextEdit = (field: string, e: React.FocusEvent<HTMLElement>) => {
+  const handleTextEdit = (field, e) => {
     if (onContentChange && isEditing) {
       onContentChange(field, e.currentTarget.textContent || '');
     }
   };
 
-  const sectionStyle: React.CSSProperties = {
+  const sectionStyle = {
     background: styles.backgroundGradient || styles.backgroundColor,
     padding: styles.padding,
   };

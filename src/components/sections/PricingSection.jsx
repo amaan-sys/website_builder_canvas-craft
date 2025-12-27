@@ -1,15 +1,7 @@
 import React from 'react';
-import { BuilderSection } from '@/types/builder';
 import { Check, Sparkles } from 'lucide-react';
 
-interface PricingSectionProps {
-  section: BuilderSection;
-  isSelected: boolean;
-  isEditing: boolean;
-  onContentChange?: (field: string, value: any) => void;
-}
-
-export function PricingSection({ section, isSelected, isEditing, onContentChange }: PricingSectionProps) {
+export function PricingSection({ section, isSelected, isEditing, onContentChange }) {
   const { content, styles } = section;
   const plans = content.plans || [];
 
@@ -46,7 +38,7 @@ export function PricingSection({ section, isSelected, isEditing, onContentChange
 
         {/* Pricing Grid */}
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {plans.map((plan: any, index: number) => (
+          {plans.map((plan, index) => (
             <div
               key={plan.id || index}
               className={`relative rounded-3xl p-8 transition-all duration-300 ${
@@ -76,7 +68,7 @@ export function PricingSection({ section, isSelected, isEditing, onContentChange
                 </div>
               </div>
               <ul className="space-y-4 mb-8">
-                {(plan.features || []).map((feature: string, i: number) => (
+                {(plan.features || []).map((feature, i) => (
                   <li key={i} className="flex items-center gap-3">
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
                       plan.popular ? 'bg-white/20' : 'bg-green-100'

@@ -1,24 +1,16 @@
 import React from 'react';
-import { BuilderSection } from '@/types/builder';
 import { ArrowUpRight } from 'lucide-react';
 
-interface ServicesSectionProps {
-  section: BuilderSection;
-  isSelected: boolean;
-  isEditing: boolean;
-  onContentChange?: (field: string, value: any) => void;
-}
-
-export function ServicesSection({ section, isSelected, isEditing, onContentChange }: ServicesSectionProps) {
+export function ServicesSection({ section, isSelected, isEditing, onContentChange }) {
   const { content, styles } = section;
 
-  const handleTextEdit = (field: string, e: React.FocusEvent<HTMLElement>) => {
+  const handleTextEdit = (field, e) => {
     if (onContentChange && isEditing) {
       onContentChange(field, e.currentTarget.textContent || '');
     }
   };
 
-  const sectionStyle: React.CSSProperties = {
+  const sectionStyle = {
     background: styles.backgroundGradient || styles.backgroundColor,
     padding: styles.padding,
   };
@@ -55,7 +47,7 @@ export function ServicesSection({ section, isSelected, isEditing, onContentChang
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {content.services?.map((service: any, index: number) => (
+          {content.services?.map((service, index) => (
             <div 
               key={service.id}
               className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:-translate-y-2"

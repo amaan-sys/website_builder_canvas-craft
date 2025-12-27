@@ -1,55 +1,10 @@
-import React, { createContext, useContext, useReducer, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { 
-  PageSchema, 
-  BuilderSection, 
-  BuilderComponent, 
-  EditorState, 
-  NavbarConfig, 
-  FooterConfig,
-  SectionStyles,
-  ComponentStyles
-} from '@/types/builder';
 import { getDefaultPage } from '@/lib/defaultPageData';
 
-// State
-interface BuilderState {
-  page: PageSchema;
-  editor: EditorState;
-  history: PageSchema[];
-  historyIndex: number;
-}
-
-// Actions
-type BuilderAction =
-  | { type: 'SET_PAGE'; payload: PageSchema }
-  | { type: 'SELECT_SECTION'; payload: string | null }
-  | { type: 'SELECT_COMPONENT'; payload: string | null }
-  | { type: 'SET_EDIT_MODE'; payload: 'content' | 'layout' }
-  | { type: 'SET_PREVIEW_MODE'; payload: boolean }
-  | { type: 'SET_DRAGGING'; payload: boolean }
-  | { type: 'SET_ZOOM'; payload: number }
-  | { type: 'TOGGLE_GRID'; payload?: boolean }
-  | { type: 'ADD_SECTION'; payload: { section: BuilderSection; index?: number } }
-  | { type: 'UPDATE_SECTION'; payload: { id: string; updates: Partial<BuilderSection> } }
-  | { type: 'DELETE_SECTION'; payload: string }
-  | { type: 'REORDER_SECTIONS'; payload: string[] }
-  | { type: 'TOGGLE_SECTION_VISIBILITY'; payload: string }
-  | { type: 'DUPLICATE_SECTION'; payload: string }
-  | { type: 'ADD_COMPONENT'; payload: { sectionId: string; component: BuilderComponent; index?: number } }
-  | { type: 'UPDATE_COMPONENT'; payload: { sectionId: string; componentId: string; updates: Partial<BuilderComponent> } }
-  | { type: 'DELETE_COMPONENT'; payload: { sectionId: string; componentId: string } }
-  | { type: 'REORDER_COMPONENTS'; payload: { sectionId: string; componentIds: string[] } }
-  | { type: 'UPDATE_NAVBAR'; payload: Partial<NavbarConfig> }
-  | { type: 'UPDATE_FOOTER'; payload: Partial<FooterConfig> }
-  | { type: 'UPDATE_SECTION_STYLES'; payload: { id: string; styles: Partial<SectionStyles> } }
-  | { type: 'UPDATE_COMPONENT_STYLES'; payload: { sectionId: string; componentId: string; styles: Partial<ComponentStyles> } }
-  | { type: 'UNDO' }
-  | { type: 'REDO' };
-
 // Reducer
-function builderReducer(state: BuilderState, action: BuilderAction): BuilderState {
-  const saveToHistory = (newPage: PageSchema): BuilderState => ({
+function builderReducer(state, action) {
+  const saveToHistory = (newPage) => ({
     ...state,
     page: newPage,
     history: [...state.history.slice(0, state.historyIndex + 1), newPage],
@@ -128,7 +83,7 @@ function builderReducer(state: BuilderState, action: BuilderAction): BuilderStat
 
     case 'REORDER_SECTIONS': {
       const sectionMap = new Map(state.page.sections.map((s) => [s.id, s]));
-      const newSections = action.payload.map((id) => sectionMap.get(id)!).filter(Boolean);
+      const newSections = action.payload.map((id) => sectionMap.get(id)).filter(Boolean);
       return saveToHistory({ ...state.page, sections: newSections });
     }
 
@@ -143,7 +98,7 @@ function builderReducer(state: BuilderState, action: BuilderAction): BuilderStat
       const sectionIndex = state.page.sections.findIndex((s) => s.id === action.payload);
       if (sectionIndex === -1) return state;
       const original = state.page.sections[sectionIndex];
-      const duplicate: BuilderSection = {
+      const duplicate = {
         ...original,
         id: uuidv4(),
         name: `${original.name} (Copy)`,
@@ -188,7 +143,7 @@ function builderReducer(state: BuilderState, action: BuilderAction): BuilderStat
       const newSections = state.page.sections.map((s) => {
         if (s.id !== action.payload.sectionId) return s;
         const componentMap = new Map(s.components.map((c) => [c.id, c]));
-        const newComponents = action.payload.componentIds.map((id) => componentMap.get(id)!).filter(Boolean);
+        const newComponents = action.payload.componentIds.map((id) => componentMap.get(id)).filter(Boolean);
         return { ...s, components: newComponents };
       });
       return saveToHistory({ ...state.page, sections: newSections });
@@ -250,47 +205,13 @@ function builderReducer(state: BuilderState, action: BuilderAction): BuilderStat
 }
 
 // Context
-interface BuilderContextType {
-  state: BuilderState;
-  dispatch: React.Dispatch<BuilderAction>;
-  // Convenience methods
-  selectSection: (id: string | null) => void;
-  selectComponent: (id: string | null) => void;
-  addSection: (section: BuilderSection, index?: number) => void;
-  updateSection: (id: string, updates: Partial<BuilderSection>) => void;
-  deleteSection: (id: string) => void;
-  duplicateSection: (id: string) => void;
-  reorderSections: (ids: string[]) => void;
-  toggleSectionVisibility: (id: string) => void;
-  updateSectionContent: (id: string, content: Record<string, any>) => void;
-  updateSectionStyles: (id: string, styles: Partial<SectionStyles>) => void;
-  addComponent: (sectionId: string, component: BuilderComponent, index?: number) => void;
-  updateComponent: (sectionId: string, componentId: string, updates: Partial<BuilderComponent>) => void;
-  deleteComponent: (sectionId: string, componentId: string) => void;
-  updateNavbar: (updates: Partial<NavbarConfig>) => void;
-  updateFooter: (updates: Partial<FooterConfig>) => void;
-  setEditMode: (mode: 'content' | 'layout') => void;
-  setPreviewMode: (enabled: boolean) => void;
-  undo: () => void;
-  redo: () => void;
-  canUndo: boolean;
-  canRedo: boolean;
-  selectedSection: BuilderSection | null;
-  selectedComponent: BuilderComponent | null;
-}
-
-const BuilderContext = createContext<BuilderContextType | undefined>(undefined);
+const BuilderContext = createContext(undefined);
 
 // Provider
-interface BuilderProviderProps {
-  children: ReactNode;
-  initialPage?: PageSchema;
-}
-
-export function BuilderProvider({ children, initialPage }: BuilderProviderProps) {
+export function BuilderProvider({ children, initialPage }) {
   const defaultPage = initialPage ?? getDefaultPage();
   
-  const initialState: BuilderState = {
+  const initialState = {
     page: defaultPage,
     editor: {
       selectedSectionId: null,
@@ -308,71 +229,71 @@ export function BuilderProvider({ children, initialPage }: BuilderProviderProps)
   const [state, dispatch] = useReducer(builderReducer, initialState);
 
   // Convenience methods
-  const selectSection = useCallback((id: string | null) => {
+  const selectSection = useCallback((id) => {
     dispatch({ type: 'SELECT_SECTION', payload: id });
   }, []);
 
-  const selectComponent = useCallback((id: string | null) => {
+  const selectComponent = useCallback((id) => {
     dispatch({ type: 'SELECT_COMPONENT', payload: id });
   }, []);
 
-  const addSection = useCallback((section: BuilderSection, index?: number) => {
+  const addSection = useCallback((section, index) => {
     dispatch({ type: 'ADD_SECTION', payload: { section, index } });
   }, []);
 
-  const updateSection = useCallback((id: string, updates: Partial<BuilderSection>) => {
+  const updateSection = useCallback((id, updates) => {
     dispatch({ type: 'UPDATE_SECTION', payload: { id, updates } });
   }, []);
 
-  const deleteSection = useCallback((id: string) => {
+  const deleteSection = useCallback((id) => {
     dispatch({ type: 'DELETE_SECTION', payload: id });
   }, []);
 
-  const duplicateSection = useCallback((id: string) => {
+  const duplicateSection = useCallback((id) => {
     dispatch({ type: 'DUPLICATE_SECTION', payload: id });
   }, []);
 
-  const reorderSections = useCallback((ids: string[]) => {
+  const reorderSections = useCallback((ids) => {
     dispatch({ type: 'REORDER_SECTIONS', payload: ids });
   }, []);
 
-  const toggleSectionVisibility = useCallback((id: string) => {
+  const toggleSectionVisibility = useCallback((id) => {
     dispatch({ type: 'TOGGLE_SECTION_VISIBILITY', payload: id });
   }, []);
 
-  const updateSectionContent = useCallback((id: string, content: Record<string, any>) => {
+  const updateSectionContent = useCallback((id, content) => {
     dispatch({ type: 'UPDATE_SECTION', payload: { id, updates: { content } } });
   }, []);
 
-  const updateSectionStyles = useCallback((id: string, styles: Partial<SectionStyles>) => {
+  const updateSectionStyles = useCallback((id, styles) => {
     dispatch({ type: 'UPDATE_SECTION_STYLES', payload: { id, styles } });
   }, []);
 
-  const addComponent = useCallback((sectionId: string, component: BuilderComponent, index?: number) => {
+  const addComponent = useCallback((sectionId, component, index) => {
     dispatch({ type: 'ADD_COMPONENT', payload: { sectionId, component, index } });
   }, []);
 
-  const updateComponent = useCallback((sectionId: string, componentId: string, updates: Partial<BuilderComponent>) => {
+  const updateComponent = useCallback((sectionId, componentId, updates) => {
     dispatch({ type: 'UPDATE_COMPONENT', payload: { sectionId, componentId, updates } });
   }, []);
 
-  const deleteComponent = useCallback((sectionId: string, componentId: string) => {
+  const deleteComponent = useCallback((sectionId, componentId) => {
     dispatch({ type: 'DELETE_COMPONENT', payload: { sectionId, componentId } });
   }, []);
 
-  const updateNavbar = useCallback((updates: Partial<NavbarConfig>) => {
+  const updateNavbar = useCallback((updates) => {
     dispatch({ type: 'UPDATE_NAVBAR', payload: updates });
   }, []);
 
-  const updateFooter = useCallback((updates: Partial<FooterConfig>) => {
+  const updateFooter = useCallback((updates) => {
     dispatch({ type: 'UPDATE_FOOTER', payload: updates });
   }, []);
 
-  const setEditMode = useCallback((mode: 'content' | 'layout') => {
+  const setEditMode = useCallback((mode) => {
     dispatch({ type: 'SET_EDIT_MODE', payload: mode });
   }, []);
 
-  const setPreviewMode = useCallback((enabled: boolean) => {
+  const setPreviewMode = useCallback((enabled) => {
     dispatch({ type: 'SET_PREVIEW_MODE', payload: enabled });
   }, []);
 
@@ -392,7 +313,7 @@ export function BuilderProvider({ children, initialPage }: BuilderProviderProps)
     ? selectedSection.components.find((c) => c.id === state.editor.selectedComponentId) ?? null
     : null;
 
-  const value: BuilderContextType = {
+  const value = {
     state,
     dispatch,
     selectSection,

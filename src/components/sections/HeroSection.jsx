@@ -1,24 +1,16 @@
 import React from 'react';
-import { BuilderSection } from '@/types/builder';
 import { ArrowRight, Play } from 'lucide-react';
 
-interface HeroSectionProps {
-  section: BuilderSection;
-  isSelected: boolean;
-  isEditing: boolean;
-  onContentChange?: (field: string, value: any) => void;
-}
-
-export function HeroSection({ section, isSelected, isEditing, onContentChange }: HeroSectionProps) {
+export function HeroSection({ section, isSelected, isEditing, onContentChange }) {
   const { content, styles, variant = 'split' } = section;
 
-  const handleTextEdit = (field: string, e: React.FocusEvent<HTMLElement>) => {
+  const handleTextEdit = (field, e) => {
     if (onContentChange && isEditing) {
       onContentChange(field, e.currentTarget.textContent || '');
     }
   };
 
-  const sectionStyle: React.CSSProperties = {
+  const sectionStyle = {
     background: styles.backgroundGradient || styles.backgroundColor,
     padding: styles.padding,
     minHeight: styles.minHeight,
@@ -440,12 +432,7 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange }:
                 alt="Hero"
                 className="w-full h-auto object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
-            
-            {/* Floating Elements */}
-            <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-xl opacity-80 animate-pulse-glow" />
-            <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-lg opacity-60" />
           </div>
         </div>
       </div>

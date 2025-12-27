@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { PageSchema, BuilderSection, NavbarConfig, FooterConfig } from '@/types/builder';
 
-export const createDefaultHeroSection = (variant: string = 'split'): BuilderSection => ({
+export const createDefaultHeroSection = (variant = 'split') => ({
   id: uuidv4(),
   type: 'hero',
   variant,
@@ -27,7 +26,7 @@ export const createDefaultHeroSection = (variant: string = 'split'): BuilderSect
   components: [],
 });
 
-export const createDefaultFeaturesSection = (variant: string = 'grid'): BuilderSection => ({
+export const createDefaultFeaturesSection = (variant = 'grid') => ({
   id: uuidv4(),
   type: 'features',
   variant,
@@ -53,7 +52,7 @@ export const createDefaultFeaturesSection = (variant: string = 'grid'): BuilderS
   components: [],
 });
 
-export const createDefaultServicesSection = (): BuilderSection => ({
+export const createDefaultServicesSection = () => ({
   id: uuidv4(),
   type: 'services',
   name: 'Services Section',
@@ -75,7 +74,7 @@ export const createDefaultServicesSection = (): BuilderSection => ({
   components: [],
 });
 
-export const createDefaultCTASection = (variant: string = 'simple'): BuilderSection => ({
+export const createDefaultCTASection = (variant = 'simple') => ({
   id: uuidv4(),
   type: 'cta',
   variant,
@@ -97,7 +96,7 @@ export const createDefaultCTASection = (variant: string = 'simple'): BuilderSect
   components: [],
 });
 
-export const createDefaultTestimonialsSection = (): BuilderSection => ({
+export const createDefaultTestimonialsSection = () => ({
   id: uuidv4(),
   type: 'testimonials',
   name: 'Testimonials',
@@ -119,7 +118,7 @@ export const createDefaultTestimonialsSection = (): BuilderSection => ({
   components: [],
 });
 
-export const createDefaultPricingSection = (): BuilderSection => ({
+export const createDefaultPricingSection = () => ({
   id: uuidv4(),
   type: 'pricing',
   name: 'Pricing',
@@ -141,7 +140,7 @@ export const createDefaultPricingSection = (): BuilderSection => ({
   components: [],
 });
 
-export const createDefaultGallerySection = (): BuilderSection => ({
+export const createDefaultGallerySection = () => ({
   id: uuidv4(),
   type: 'gallery',
   name: 'Gallery',
@@ -166,7 +165,7 @@ export const createDefaultGallerySection = (): BuilderSection => ({
   components: [],
 });
 
-export const createDefaultContactSection = (): BuilderSection => ({
+export const createDefaultContactSection = () => ({
   id: uuidv4(),
   type: 'contact',
   name: 'Contact',
@@ -186,7 +185,7 @@ export const createDefaultContactSection = (): BuilderSection => ({
   components: [],
 });
 
-export const createDefaultStatsSection = (): BuilderSection => ({
+export const createDefaultStatsSection = () => ({
   id: uuidv4(),
   type: 'stats',
   name: 'Stats',
@@ -207,7 +206,7 @@ export const createDefaultStatsSection = (): BuilderSection => ({
   components: [],
 });
 
-export const createDefaultTeamSection = (): BuilderSection => ({
+export const createDefaultTeamSection = () => ({
   id: uuidv4(),
   type: 'team',
   name: 'Team',
@@ -230,7 +229,7 @@ export const createDefaultTeamSection = (): BuilderSection => ({
   components: [],
 });
 
-export const createDefaultFAQSection = (): BuilderSection => ({
+export const createDefaultFAQSection = () => ({
   id: uuidv4(),
   type: 'faq',
   name: 'FAQ',
@@ -253,7 +252,7 @@ export const createDefaultFAQSection = (): BuilderSection => ({
   components: [],
 });
 
-export const createDefaultLogoCloudSection = (): BuilderSection => ({
+export const createDefaultLogoCloudSection = () => ({
   id: uuidv4(),
   type: 'logocloud',
   name: 'Logo Cloud',
@@ -276,7 +275,7 @@ export const createDefaultLogoCloudSection = (): BuilderSection => ({
   components: [],
 });
 
-export const createDefaultNavbar = (): NavbarConfig => ({
+export const createDefaultNavbar = () => ({
   id: uuidv4(),
   style: 'minimal',
   logo: {
@@ -296,7 +295,7 @@ export const createDefaultNavbar = (): NavbarConfig => ({
   },
 });
 
-export const createDefaultFooter = (): FooterConfig => ({
+export const createDefaultFooter = () => ({
   id: uuidv4(),
   style: 'columns',
   logo: {
@@ -344,7 +343,7 @@ export const createDefaultFooter = (): FooterConfig => ({
   },
 });
 
-export const getDefaultPage = (): PageSchema => ({
+export const getDefaultPage = () => ({
   id: uuidv4(),
   name: 'Home',
   slug: '/',

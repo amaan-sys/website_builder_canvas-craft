@@ -1,31 +1,23 @@
 import React from 'react';
-import { BuilderSection } from '@/types/builder';
 import * as Icons from 'lucide-react';
 
-interface FeaturesSectionProps {
-  section: BuilderSection;
-  isSelected: boolean;
-  isEditing: boolean;
-  onContentChange?: (field: string, value: any) => void;
-}
-
-export function FeaturesSection({ section, isSelected, isEditing, onContentChange }: FeaturesSectionProps) {
+export function FeaturesSection({ section, isSelected, isEditing, onContentChange }) {
   const { content, styles } = section;
 
-  const handleTextEdit = (field: string, e: React.FocusEvent<HTMLElement>) => {
+  const handleTextEdit = (field, e) => {
     if (onContentChange && isEditing) {
       onContentChange(field, e.currentTarget.textContent || '');
     }
   };
 
-  const sectionStyle: React.CSSProperties = {
+  const sectionStyle = {
     background: styles.backgroundGradient || styles.backgroundColor,
     padding: styles.padding,
   };
 
   // Dynamic icon component
-  const getIcon = (iconName: string) => {
-    const IconComponent = (Icons as any)[iconName];
+  const getIcon = (iconName) => {
+    const IconComponent = Icons[iconName];
     return IconComponent ? <IconComponent className="w-8 h-8" /> : null;
   };
 
@@ -61,7 +53,7 @@ export function FeaturesSection({ section, isSelected, isEditing, onContentChang
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {content.features?.map((feature: any, index: number) => (
+          {content.features?.map((feature, index) => (
             <div 
               key={feature.id}
               className="group relative p-8 rounded-2xl transition-all duration-300 hover:shadow-soft hover:-translate-y-1"

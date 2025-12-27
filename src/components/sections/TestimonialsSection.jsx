@@ -1,15 +1,7 @@
 import React from 'react';
-import { BuilderSection } from '@/types/builder';
 import { Quote, Star } from 'lucide-react';
 
-interface TestimonialsSectionProps {
-  section: BuilderSection;
-  isSelected: boolean;
-  isEditing: boolean;
-  onContentChange?: (field: string, value: any) => void;
-}
-
-export function TestimonialsSection({ section, isSelected, isEditing, onContentChange }: TestimonialsSectionProps) {
+export function TestimonialsSection({ section, isSelected, isEditing, onContentChange }) {
   const { content, styles } = section;
   const testimonials = content.testimonials || [];
 
@@ -46,7 +38,7 @@ export function TestimonialsSection({ section, isSelected, isEditing, onContentC
 
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {testimonials.map((testimonial: any, index: number) => (
+          {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.id || index}
               className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100"

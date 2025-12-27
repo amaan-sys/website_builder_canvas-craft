@@ -1,15 +1,7 @@
 import React from 'react';
-import { BuilderSection } from '@/types/builder';
 import { ExternalLink } from 'lucide-react';
 
-interface GallerySectionProps {
-  section: BuilderSection;
-  isSelected: boolean;
-  isEditing: boolean;
-  onContentChange?: (field: string, value: any) => void;
-}
-
-export function GallerySection({ section, isSelected, isEditing, onContentChange }: GallerySectionProps) {
+export function GallerySection({ section, isSelected, isEditing, onContentChange }) {
   const { content, styles } = section;
   const images = content.images || [];
 
@@ -46,7 +38,7 @@ export function GallerySection({ section, isSelected, isEditing, onContentChange
 
         {/* Gallery Grid - Masonry-like */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {images.map((image: any, index: number) => (
+          {images.map((image, index) => (
             <div
               key={image.id || index}
               className={`relative group overflow-hidden rounded-2xl ${

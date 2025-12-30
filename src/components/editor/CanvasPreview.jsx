@@ -31,7 +31,7 @@ export function CanvasPreview() {
 
   return (
     <div
-      className="h-full overflow-y-auto p-8 scrollbar-thin"
+      className="h-full overflow-y-auto  scrollbar-thin"
       style={{ backgroundColor: 'hsl(var(--builder-panel))' }}
       onClick={handleCanvasClick}
     >
@@ -55,13 +55,11 @@ export function CanvasPreview() {
               <div
                 key={section.id}
                 onClick={(e) => handleSectionClick(section.id, e)}
-                className={`relative transition-all duration-200 ${
-                  !editor.previewMode ? 'cursor-pointer' : ''
-                } ${
-                  editor.selectedSectionId === section.id && !editor.previewMode
+                className={`relative transition-all duration-200 ${!editor.previewMode ? 'cursor-pointer' : ''
+                  } ${editor.selectedSectionId === section.id && !editor.previewMode
                     ? 'ring-2 ring-primary ring-inset'
                     : ''
-                }`}
+                  }`}
               >
                 <SectionRenderer
                   section={section}
@@ -84,6 +82,16 @@ export function CanvasPreview() {
               </div>
             ))}
 
+          {/* EMPTY STATE */}
+          {page.sections.filter(s => s.visible).length === 0 && (
+            <div className="flex items-center justify-center h-[50vh] text-muted-foreground" style={{ backgroundColor: 'hsl(var(--builder-panel))' }}>
+              <div className="text-center">
+                <p className="text-lg font-medium">No visible sections</p>
+                <p className="text-sm">Add sections from the left panel</p>
+              </div>
+            </div>
+          )}
+
           <FooterPreview
             config={page.footer}
             isEditing={!editor.previewMode}
@@ -91,15 +99,7 @@ export function CanvasPreview() {
         </div>
       </div>
 
-      {/* EMPTY STATE */}
-      {page.sections.filter(s => s.visible).length === 0 && (
-        <div className="flex items-center justify-center h-[60vh] text-muted-foreground">
-          <div className="text-center">
-            <p className="text-lg font-medium">No visible sections</p>
-            <p className="text-sm">Add sections from the left panel</p>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 }

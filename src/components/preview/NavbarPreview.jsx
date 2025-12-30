@@ -17,15 +17,15 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
       className={`${config.styles.sticky ? 'sticky top-0' : 'relative'} z-50 backdrop-blur-md`}
       style={navStyle}
     >
-      <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center shrink-0">
             {config.logo.imageUrl ? (
-              <img src={config.logo.imageUrl} alt="Logo" className="h-10" />
+              <img src={config.logo.imageUrl} alt="Logo" className="h-9 md:h-10" />
             ) : (
               <span
-                className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
                 contentEditable={isEditing}
                 suppressContentEditableWarning
               >
@@ -64,8 +64,9 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? (
               <X className="w-6 h-6" />
@@ -74,35 +75,40 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
             )}
           </button>
         </div>
+      </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-white/10">
-            <div className="flex flex-col gap-4">
-              {config.links.map((link) => (
-                <a
-                  key={link.id}
-                  href={link.href}
-                  className={`font-medium py-2 ${
-                    link.isButton ? 'px-6 py-2.5 rounded-lg text-center' : ''
-                  }`}
-                  style={
-                    link.isButton
-                      ? {
-                          background:
-                            'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
-                          color: '#ffffff',
-                        }
-                      : { color: config.styles.textColor }
-                  }
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`md:hidden absolute top-full left-0 w-full overflow-hidden transition-all duration-300 ${
+          mobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+        }`}
+        style={navStyle}
+      >
+        <div className="px-6 py-6 border-t border-white/10 flex flex-col gap-4">
+          {config.links.map((link) => (
+            <a
+              key={link.id}
+              href={link.href}
+              className={`font-medium py-3 ${
+                link.isButton
+                  ? 'rounded-lg text-center'
+                  : 'border-b border-white/10'
+              }`}
+              style={
+                link.isButton
+                  ? {
+                      background:
+                        'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+                      color: '#ffffff',
+                    }
+                  : { color: config.styles.textColor }
+              }
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
       </div>
     </nav>
   );

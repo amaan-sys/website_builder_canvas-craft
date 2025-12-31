@@ -4,6 +4,9 @@ import { Menu, X } from 'lucide-react';
 export function NavbarPreview({ config, isEditing, onUpdate }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  /* ------------------------------
+     NAVBAR STYLES (dynamic)
+  ------------------------------ */
   const navStyle = {
     backgroundColor:
       config.styles.backgroundColor === 'transparent'
@@ -14,27 +17,46 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
 
   return (
     <nav
-      className={`${config.styles.sticky ? 'sticky top-0' : 'relative'} z-50 backdrop-blur-md`}
+      className={`${
+        config.styles.sticky ? 'sticky top-0' : 'relative'
+      } z-50 backdrop-blur-md`}
       style={navStyle}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
+
+          {/* =====================================================
+              LOGO SECTION (EDITABLE TEXT LOGO HERE)
+          ===================================================== */}
           <div className="flex items-center shrink-0">
             {config.logo.imageUrl ? (
-              <img src={config.logo.imageUrl} alt="Logo" className="h-9 md:h-10" />
+              <img
+                src={config.logo.imageUrl}
+                alt="Logo"
+                className="h-9 md:h-10"
+              />
             ) : (
               <span
                 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
-                contentEditable={isEditing}
-                suppressContentEditableWarning
+                contentEditable={isEditing}              // ⭐ NEW
+                suppressContentEditableWarning           // ⭐ NEW
+                onBlur={(e) =>                            // ⭐ NEW
+                  onUpdate({
+                    logo: {
+                      ...config.logo,
+                      text: e.target.innerText,
+                    },
+                  })
+                }
               >
                 {config.logo.text}
               </span>
             )}
           </div>
 
-          {/* Desktop Navigation */}
+          {/* =====================================================
+              DESKTOP NAVIGATION (EDITABLE LINKS HERE)
+          ===================================================== */}
           <div className="hidden md:flex items-center gap-8">
             {config.links.map((link) =>
               link.isButton ? (
@@ -43,7 +65,8 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
                   href={link.href}
                   className="px-6 py-2.5 rounded-lg font-medium transition-all duration-300 hover:shadow-glow"
                   style={{
-                    background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+                    background:
+                      'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
                     color: '#ffffff',
                   }}
                 >
@@ -55,6 +78,17 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
                   href={link.href}
                   className="font-medium transition-colors hover:text-primary"
                   style={{ color: config.styles.textColor }}
+                  contentEditable={isEditing}              // ⭐ NEW
+                  suppressContentEditableWarning           // ⭐ NEW
+                  onBlur={(e) =>                            // ⭐ NEW
+                    onUpdate({
+                      links: config.links.map((l) =>
+                        l.id === link.id
+                          ? { ...l, label: e.target.innerText }
+                          : l
+                      ),
+                    })
+                  }
                 >
                   {link.label}
                 </a>
@@ -62,7 +96,9 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* =====================================================
+              MOBILE MENU BUTTON
+          ===================================================== */}
           <button
             className="md:hidden p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
@@ -77,7 +113,9 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* =====================================================
+          MOBILE MENU (EDITABLE LINKS ALSO HERE)
+      ===================================================== */}
       <div
         className={`md:hidden absolute top-full left-0 w-full overflow-hidden transition-all duration-300 ${
           mobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
@@ -102,6 +140,17 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
                       color: '#ffffff',
                     }
                   : { color: config.styles.textColor }
+              }
+              contentEditable={isEditing}                  // ⭐ NEW
+              suppressContentEditableWarning               // ⭐ NEW
+              onBlur={(e) =>                                // ⭐ NEW
+                onUpdate({
+                  links: config.links.map((l) =>
+                    l.id === link.id
+                      ? { ...l, label: e.target.innerText }
+                      : l
+                  ),
+                })
               }
               onClick={() => setMobileMenuOpen(false)}
             >

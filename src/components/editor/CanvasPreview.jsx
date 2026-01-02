@@ -5,7 +5,7 @@ import { FooterPreview } from '@/components/preview/FooterPreview';
 import { SectionRenderer } from '@/components/sections/SectionRenderer';
 
 export function CanvasPreview() {
-  const { state, selectSection, updateSectionContent } = useBuilder();
+  const { state, selectSection, updateSectionContent, updateNavbar, updateFooter } = useBuilder();
   const { page, editor } = state;
 
   const handleSectionClick = (sectionId, e) => {
@@ -47,6 +47,7 @@ export function CanvasPreview() {
           <NavbarPreview
             config={page.navbar}
             isEditing={!editor.previewMode}
+            onUpdate={(updates) => updateNavbar(updates)}
           />
 
           {page.sections
@@ -95,6 +96,7 @@ export function CanvasPreview() {
           <FooterPreview
             config={page.footer}
             isEditing={!editor.previewMode}
+            onUpdate={(updates) => updateFooter(updates)}
           />
         </div>
       </div>

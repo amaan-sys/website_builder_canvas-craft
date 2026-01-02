@@ -25,6 +25,6 @@ function EditorContent() {
   );
 }
 
-export function WebsiteEditor() {
-  return <BuilderProvider><EditorContent /></BuilderProvider>;
+export function WebsiteEditor({ initialPage }) {
+  return <BuilderProvider initialPage={initialPage}><EditorContent /></BuilderProvider>;
 }

@@ -3,9 +3,72 @@ import { Mail, Phone, MapPin, Send } from 'lucide-react';
 
 export function ContactSection({ section, isSelected, isEditing, onContentChange }) {
   const { content, styles } = section;
+  const variant = section.variant || 'split';
+  const background = styles.useGradient ? (styles.backgroundGradient || styles.backgroundColor) : (styles.backgroundColor || '#f8fafc');
+  const padding = styles.padding || '100px 0';
 
+  if (variant === 'centered') {
+    return (
+      <section className="relative" style={{ background, padding }}>
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{ color: '#0f172a' }} contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => onContentChange?.('headline', e.currentTarget.textContent)}>{content.headline || 'Get In Touch'}</h2>
+            <p className="text-lg opacity-80" style={{ color: '#64748b' }} contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => onContentChange?.('subheadline', e.currentTarget.textContent)}>{content.subheadline || "We'd love to hear from you."}</p>
+          </div>
+
+          <div className="max-w-2xl mx-auto bg-white rounded-3xl p-8 shadow-lg border border-slate-100">
+            <form className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div><label className="block text-sm font-medium text-slate-700 mb-2">First Name</label><input type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 outline-none" placeholder="John" /></div>
+                <div><label className="block text-sm font-medium text-slate-700 mb-2">Last Name</label><input type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 outline-none" placeholder="Doe" /></div>
+              </div>
+              <div><label className="block text-sm font-medium text-slate-700 mb-2">Email</label><input type="email" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 outline-none" placeholder="john@example.com" /></div>
+              <div><label className="block text-sm font-medium text-slate-700 mb-2">Message</label><textarea rows={4} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 outline-none resize-none" placeholder="Your message..." /></div>
+              <button type="submit" className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:opacity-90 flex items-center justify-center gap-2"><Send className="w-5 h-5" />Send Message</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (variant === 'map') {
+    return (
+      <section className="relative" style={{ background, padding }}>
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{ color: '#0f172a' }} contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => onContentChange?.('headline', e.currentTarget.textContent)}>{content.headline || 'Get In Touch'}</h2>
+            <p className="text-lg opacity-80" style={{ color: '#64748b' }} contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => onContentChange?.('subheadline', e.currentTarget.textContent)}>{content.subheadline || "We'd love to hear from you."}</p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto items-start">
+            <div className="bg-white rounded-3xl p-8 shadow-lg border border-slate-100">
+              <form className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div><label className="block text-sm font-medium text-slate-700 mb-2">First Name</label><input type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 outline-none" placeholder="John" /></div>
+                  <div><label className="block text-sm font-medium text-slate-700 mb-2">Last Name</label><input type="text" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 outline-none" placeholder="Doe" /></div>
+                </div>
+                <div><label className="block text-sm font-medium text-slate-700 mb-2">Email</label><input type="email" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 outline-none" placeholder="john@example.com" /></div>
+                <div><label className="block text-sm font-medium text-slate-700 mb-2">Message</label><textarea rows={4} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 outline-none resize-none" placeholder="Your message..." /></div>
+                <button type="submit" className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:opacity-90 flex items-center justify-center gap-2"><Send className="w-5 h-5" />Send Message</button>
+              </form>
+            </div>
+            <div className="rounded-3xl overflow-hidden bg-white/5">
+              {content.mapEmbed ? (
+                <iframe title="map" src={content.mapEmbed} className="w-full h-full min-h-[360px] border-0" />
+              ) : (
+                <div className="w-full h-[360px] flex items-center justify-center text-muted-foreground">Add a Map Embed URL in the Properties panel (e.g., Google Maps iframe URL)</div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // default split
   return (
-    <section className="relative" style={{ background: styles.backgroundGradient || styles.backgroundColor || '#f8fafc', padding: styles.padding || '100px 0' }}>
+    <section className="relative" style={{ background, padding }}>
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{ color: '#0f172a' }} contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => onContentChange?.('headline', e.currentTarget.textContent)}>{content.headline || 'Get In Touch'}</h2>

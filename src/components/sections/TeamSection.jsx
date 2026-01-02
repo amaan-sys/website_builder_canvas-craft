@@ -3,9 +3,60 @@ import { Linkedin, Twitter, Github } from 'lucide-react';
 export function TeamSection({ section, isEditing, onContentChange }) {
   const { content, styles } = section;
   const members = content.members || [];
+  const variant = section.variant || 'grid';
+  const background = styles.useGradient ? (styles.backgroundGradient || styles.backgroundColor) : (styles.backgroundColor || '#ffffff');
+  const padding = styles.padding || '100px 0';
   const getSocialIcon = (platform) => { switch (platform) { case 'linkedin': return Linkedin; case 'twitter': return Twitter; case 'github': return Github; default: return Linkedin; } };
+
+  if (variant === 'carousel') {
+    return (
+      <section className="relative" style={{ background, padding }}>
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="text-center max-w-3xl mx-auto mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6" contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => onContentChange?.('headline', e.currentTarget.textContent)}>{content.headline || 'Meet Our Team'}</h2>
+            <p className="text-lg opacity-80" contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => onContentChange?.('subheadline', e.currentTarget.textContent)}>{content.subheadline || 'The talented people behind our success'}</p>
+          </div>
+          <div className="overflow-x-auto whitespace-nowrap py-4 hide-scrollbar">
+            {members.map((member, index) => (
+              <div key={member.id || index} className="inline-block w-64 mr-4 text-center bg-white rounded-2xl p-4">
+                <img src={member.avatar} alt={member.name} className="w-28 h-28 rounded-full mx-auto object-cover mb-4" />
+                <h4 className="font-semibold">{member.name}</h4>
+                <p className="text-sm text-slate-500">{member.role}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (variant === 'list') {
+    return (
+      <section className="relative" style={{ background, padding }}>
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="text-center max-w-3xl mx-auto mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6" contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => onContentChange?.('headline', e.currentTarget.textContent)}>{content.headline || 'Meet Our Team'}</h2>
+            <p className="text-lg opacity-80" contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => onContentChange?.('subheadline', e.currentTarget.textContent)}>{content.subheadline || 'The talented people behind our success'}</p>
+          </div>
+          <div className="space-y-4 max-w-3xl mx-auto">
+            {members.map((member) => (
+              <div key={member.id} className="flex items-center gap-4 bg-white rounded-xl p-4">
+                <img src={member.avatar} alt={member.name} className="w-20 h-20 rounded-full object-cover" />
+                <div>
+                  <h4 className="font-semibold">{member.name}</h4>
+                  <p className="text-sm text-slate-500">{member.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // default grid
   return (
-    <section className="relative" style={{ background: styles.backgroundGradient || styles.backgroundColor || '#ffffff', padding: styles.padding || '100px 0' }}>
+    <section className="relative" style={{ background, padding }}>
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{ color: '#0f172a' }} contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => onContentChange?.('headline', e.currentTarget.textContent)}>{content.headline || 'Meet Our Team'}</h2>
@@ -17,4 +68,4 @@ export function TeamSection({ section, isEditing, onContentChange }) {
       </div>
     </section>
   );
-}
+} 

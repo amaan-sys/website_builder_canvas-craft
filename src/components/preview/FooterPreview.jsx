@@ -1,4 +1,7 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
+import { useBuilder } from '@/contexts/BuilderContext';
+import { createDefaultHeroSection, createDefaultCTASection, createDefaultFooter, createDefaultNavbar, createFeaturesPage, createServicesPage, createPricingPage, createContactPage, createStartPage, createTemplatesPage, createAboutPage, createBlogPage, createCareersPage, createHelpPage, createStatusPage } from '@/lib/defaultPageData';
 import {
   Facebook,
   Twitter,
@@ -18,6 +21,9 @@ const socialIcons = {
 };
 
 export function FooterPreview({ config, isEditing, onUpdate }) {
+  const navigate = useNavigate();
+  const { updatePageName, pages, setActivePage, createPage } = useBuilder();
+
   const footerStyle = {
     backgroundColor: config.styles.backgroundColor,
     color: config.styles.textColor,
@@ -113,25 +119,72 @@ export function FooterPreview({ config, isEditing, onUpdate }) {
                   <li key={link.id}>
                     <a
                       href={link.href}
+                      onClick={(e) => {
+                        if (isEditing) {
+                          const target = pages.find(p => p.slug === link.href);
+                          if (target) {
+                            e.preventDefault();
+                            setActivePage(target.id);
+                          } else if (link.href && link.href.startsWith('/')) {
+                            e.preventDefault();
+                            // create new page for slug (reuse factories if available)
+                            const slug = link.href;
+                            let newPage = null;
+                            switch (slug) {
+                              case '/features': newPage = createFeaturesPage(); break;
+                              case '/services': newPage = createServicesPage(); break;
+                              case '/pricing': newPage = createPricingPage(); break;
+                              case '/contact': newPage = createContactPage(); break;
+                              case '/start': newPage = createStartPage(); break;
+                              case '/templates': newPage = createTemplatesPage(); break;
+                              case '/about': newPage = createAboutPage(); break;
+                              case '/blog': newPage = createBlogPage(); break;
+                              case '/careers': newPage = createCareersPage(); break;
+                              case '/help': newPage = createHelpPage(); break;
+                              case '/status': newPage = createStatusPage(); break;
+                              default:
+                                newPage = {
+                                  id: (Math.random()+1).toString(36).substring(7),
+                                  name: link.label || slug.replace('/', '') || 'New Page',
+                                  slug,
+                                  navbar: createDefaultNavbar(),
+                                  sections: [createDefaultHeroSection(), createDefaultCTASection()],
+                                  footer: createDefaultFooter(),
+                                };
+                            }
+                            createPage(newPage);
+                          }
+                        } else {
+                          if (!isEditing && link.href && link.href.startsWith('/')) {
+                            e.preventDefault();
+                            navigate(link.href);
+                          }
+                        }
+                      }}
                       className="opacity-60 hover:opacity-100 transition-opacity hover:text-primary"
                       contentEditable={isEditing}            // ⭐ NEW
                       suppressContentEditableWarning         // ⭐ NEW
-                      onBlur={(e) =>                          // ⭐ NEW
-                        onUpdate({
-                          columns: config.columns.map((c) =>
-                            c.id === column.id
-                              ? {
-                                  ...c,
-                                  links: c.links.map((l) =>
-                                    l.id === link.id
-                                      ? { ...l, label: e.target.innerText }
-                                      : l
-                                  ),
-                                }
-                              : c
-                          ),
-                        })
+                      onBlur={(e) => {
+                      const newLabel = e.target.innerText;
+                      onUpdate({
+                        columns: config.columns.map((c) =>
+                          c.id === column.id
+                            ? {
+                                ...c,
+                                links: c.links.map((l) =>
+                                  l.id === link.id
+                                    ? { ...l, label: newLabel }
+                                    : l
+                                ),
+                              }
+                            : c
+                        ),
+                      });
+
+                      if (link.href && link.href.startsWith('/')) {
+                        updatePageName(link.href, newLabel);
                       }
+                    }}
                     >
                       {link.label}
                     </a>

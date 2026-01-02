@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { useBuilder } from '@/contexts/BuilderContext';
+import { useNavigate } from 'react-router-dom';
+import { createDefaultHeroSection, createDefaultCTASection, createDefaultFooter, createDefaultNavbar, createFeaturesPage, createServicesPage, createPricingPage, createContactPage, createStartPage, createTemplatesPage, createAboutPage, createBlogPage, createCareersPage, createHelpPage, createStatusPage } from '@/lib/defaultPageData';
+import { v4 as uuidv4 } from 'uuid';
 
 export function NavbarPreview({ config, isEditing, onUpdate }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const { pages, setActivePage, updatePageName, createPage } = useBuilder();
 
   /* ------------------------------
      NAVBAR STYLES (dynamic)
@@ -13,6 +19,63 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
         ? 'rgba(15, 23, 42, 0.8)'
         : config.styles.backgroundColor,
     color: config.styles.textColor,
+  };
+
+  const navigate = useNavigate();
+
+  const handleNavClick = (e, link) => {
+    if (isEditing) {
+      const targetPage = pages.find((p) => p.slug === link.href);
+      if (targetPage) {
+        e.preventDefault();
+        setActivePage(targetPage.id);
+        setMobileMenuOpen(false);
+        return;
+      }
+
+      // If no page exists for this href, create a new page on-the-fly
+      if (link.href && link.href.startsWith('/')) {
+        e.preventDefault();
+        // Map slug to page factory if we have one
+        const slug = link.href;
+        let newPage = null;
+        switch (slug) {
+          case '/features': newPage = createFeaturesPage(); break;
+          case '/services': newPage = createServicesPage(); break;
+          case '/pricing': newPage = createPricingPage(); break;
+          case '/contact': newPage = createContactPage(); break;
+          case '/start': newPage = createStartPage(); break;
+          case '/templates': newPage = createTemplatesPage(); break;
+          case '/about': newPage = createAboutPage(); break;
+          case '/blog': newPage = createBlogPage(); break;
+          case '/careers': newPage = createCareersPage(); break;
+          case '/help': newPage = createHelpPage(); break;
+          case '/status': newPage = createStatusPage(); break;
+          default:
+            newPage = {
+              id: uuidv4(),
+              name: link.label || slug.replace('/', '') || 'New Page',
+              slug: slug,
+              navbar: createDefaultNavbar(),
+              sections: [createDefaultHeroSection(), createDefaultCTASection()],
+              footer: createDefaultFooter(),
+            };
+        }
+
+        createPage(newPage);
+        setMobileMenuOpen(false);
+        return;
+      }
+
+      return;
+    }
+
+    // Preview mode: navigate as SPA when link is an internal route
+    if (link.href && link.href.startsWith('/')) {
+      e.preventDefault();
+      navigate(link.href);
+      setMobileMenuOpen(false);
+    }
   };
 
   return (
@@ -26,7 +89,7 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
         <div className="flex items-center justify-between h-16 md:h-20">
 
           {/* =====================================================
-              LOGO SECTION (EDITABLE TEXT LOGO HERE)
+              LOGO SECTION
           ===================================================== */}
           <div className="flex items-center shrink-0">
             {config.logo.imageUrl ? (
@@ -38,9 +101,9 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
             ) : (
               <span
                 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
-                contentEditable={isEditing}              // ⭐ NEW
-                suppressContentEditableWarning           // ⭐ NEW
-                onBlur={(e) =>                            // ⭐ NEW
+                contentEditable={isEditing}
+                suppressContentEditableWarning
+                onBlur={(e) =>
                   onUpdate({
                     logo: {
                       ...config.logo,
@@ -55,7 +118,7 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
           </div>
 
           {/* =====================================================
-              DESKTOP NAVIGATION (EDITABLE LINKS HERE)
+              DESKTOP NAVIGATION
           ===================================================== */}
           <div className="hidden md:flex items-center gap-8">
             {config.links.map((link) =>
@@ -63,6 +126,7 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
                 <a
                   key={link.id}
                   href={link.href}
+                  onClick={(e) => handleNavClick(e, link)}
                   className="px-6 py-2.5 rounded-lg font-medium transition-all duration-300 hover:shadow-glow"
                   style={{
                     background:
@@ -76,19 +140,24 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
                 <a
                   key={link.id}
                   href={link.href}
+                  onClick={(e) => handleNavClick(e, link)}
                   className="font-medium transition-colors hover:text-primary"
                   style={{ color: config.styles.textColor }}
-                  contentEditable={isEditing}              // ⭐ NEW
-                  suppressContentEditableWarning           // ⭐ NEW
-                  onBlur={(e) =>                            // ⭐ NEW
+                  contentEditable={isEditing}
+                  suppressContentEditableWarning
+                  onBlur={(e) => {
+                    const newLabel = e.target.innerText;
                     onUpdate({
                       links: config.links.map((l) =>
                         l.id === link.id
-                          ? { ...l, label: e.target.innerText }
+                          ? { ...l, label: newLabel }
                           : l
                       ),
-                    })
-                  }
+                    });
+                    if (link.href && link.href.startsWith('/')) {
+                      updatePageName(link.href, newLabel);
+                    }
+                  }}
                 >
                   {link.label}
                 </a>
@@ -114,7 +183,7 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
       </div>
 
       {/* =====================================================
-          MOBILE MENU (EDITABLE LINKS ALSO HERE)
+          MOBILE MENU
       ===================================================== */}
       <div
         className={`md:hidden absolute top-full left-0 w-full overflow-hidden transition-all duration-300 ${
@@ -127,6 +196,7 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
             <a
               key={link.id}
               href={link.href}
+              onClick={(e) => handleNavClick(e, link)}
               className={`font-medium py-3 ${
                 link.isButton
                   ? 'rounded-lg text-center'
@@ -141,9 +211,9 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
                     }
                   : { color: config.styles.textColor }
               }
-              contentEditable={isEditing}                  // ⭐ NEW
-              suppressContentEditableWarning               // ⭐ NEW
-              onBlur={(e) =>                                // ⭐ NEW
+              contentEditable={isEditing}
+              suppressContentEditableWarning
+              onBlur={(e) =>
                 onUpdate({
                   links: config.links.map((l) =>
                     l.id === link.id
@@ -152,7 +222,6 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
                   ),
                 })
               }
-              onClick={() => setMobileMenuOpen(false)}
             >
               {link.label}
             </a>

@@ -2,7 +2,7 @@ import React from 'react';
 import * as Icons from 'lucide-react';
 
 export function FeaturesSection({ section, isSelected, isEditing, onContentChange }) {
-  const { content, styles } = section;
+  const { content, styles, variant = 'grid' } = section;
 
   const handleTextEdit = (field, e) => {
     if (onContentChange && isEditing) {
@@ -10,8 +10,10 @@ export function FeaturesSection({ section, isSelected, isEditing, onContentChang
     }
   };
 
+  const background = styles.useGradient ? (styles.backgroundGradient || styles.backgroundColor) : (styles.backgroundColor || '#ffffff');
+
   const sectionStyle = {
-    background: styles.backgroundGradient || styles.backgroundColor,
+    background,
     padding: styles.padding,
   };
 
@@ -21,11 +23,91 @@ export function FeaturesSection({ section, isSelected, isEditing, onContentChang
     return IconComponent ? <IconComponent className="w-8 h-8" /> : null;
   };
 
+  const renderGrid = () => (
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {content.features?.map((feature, index) => (
+        <div 
+          key={feature.id}
+          className="group relative p-8 rounded-2xl transition-all duration-300 hover:shadow-soft hover:-translate-y-1"
+          style={{ 
+            background: '#f8fafc',
+            animationDelay: `${index * 0.1}s`
+          }}
+        >
+          {/* Icon */}
+          <div 
+            className="w-16 h-16 rounded-xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110"
+            style={{ 
+              background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+              color: '#ffffff'
+            }}
+          >
+            {getIcon(feature.icon)}
+          </div>
+
+          {/* Content */}
+          <h3 
+            className="text-xl font-bold mb-3"
+            style={{ color: '#0f172a' }}
+            contentEditable={isEditing}
+            suppressContentEditableWarning
+            onBlur={(e) => {
+              if (!isEditing || !onContentChange) return;
+              const updated = content.features.map((f) => f.id === feature.id ? { ...f, title: e.currentTarget.textContent } : f);
+              onContentChange('features', updated);
+            }}
+          >
+            {feature.title}
+          </h3>
+          <p 
+            className="opacity-70 leading-relaxed"
+            style={{ color: '#475569' }}
+            contentEditable={isEditing}
+            suppressContentEditableWarning
+            onBlur={(e) => {
+              if (!isEditing || !onContentChange) return;
+              const updated = content.features.map((f) => f.id === feature.id ? { ...f, description: e.currentTarget.textContent } : f);
+              onContentChange('features', updated);
+            }}
+          >
+            {feature.description}
+          </p>
+
+          {/* Hover Accent */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-b-2xl" />
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderList = () => (
+    <div className="space-y-4 max-w-2xl mx-auto">
+      {content.features?.map((feature) => (
+        <div key={feature.id} className="flex items-start gap-4">
+          <div className="w-12 h-12 flex items-center justify-center rounded-md bg-primary text-white">{getIcon(feature.icon)}</div>
+          <div>
+            <h3 contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => { if (!isEditing || !onContentChange) return; const updated = content.features.map((f) => f.id === feature.id ? { ...f, title: e.currentTarget.textContent } : f); onContentChange('features', updated); }}>{feature.title}</h3>
+            <p contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => { if (!isEditing || !onContentChange) return; const updated = content.features.map((f) => f.id === feature.id ? { ...f, description: e.currentTarget.textContent } : f); onContentChange('features', updated); }} className="text-sm text-muted-foreground">{feature.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderIcons = () => (
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {content.features?.map((feature) => (
+        <div key={feature.id} className="flex flex-col items-center text-center p-6 bg-white rounded-lg shadow-sm">
+          <div className="w-20 h-20 rounded-lg flex items-center justify-center bg-primary text-white mb-4">{getIcon(feature.icon)}</div>
+          <h4 contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => { if (!isEditing || !onContentChange) return; const updated = content.features.map((f) => f.id === feature.id ? { ...f, title: e.currentTarget.textContent } : f); onContentChange('features', updated); }}>{feature.title}</h4>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <section 
-      className={`relative transition-all duration-300 ${
-        isSelected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''
-      }`}
+      className={`relative transition-all duration-300 ${isSelected ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
       style={sectionStyle}
     >
       <div className="container mx-auto px-6">
@@ -51,51 +133,8 @@ export function FeaturesSection({ section, isSelected, isEditing, onContentChang
           </p>
         </div>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {content.features?.map((feature, index) => (
-            <div 
-              key={feature.id}
-              className="group relative p-8 rounded-2xl transition-all duration-300 hover:shadow-soft hover:-translate-y-1"
-              style={{ 
-                background: '#f8fafc',
-                animationDelay: `${index * 0.1}s`
-              }}
-            >
-              {/* Icon */}
-              <div 
-                className="w-16 h-16 rounded-xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110"
-                style={{ 
-                  background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
-                  color: '#ffffff'
-                }}
-              >
-                {getIcon(feature.icon)}
-              </div>
-
-              {/* Content */}
-              <h3 
-                className="text-xl font-bold mb-3"
-                style={{ color: '#0f172a' }}
-                contentEditable={isEditing}
-                suppressContentEditableWarning
-              >
-                {feature.title}
-              </h3>
-              <p 
-                className="opacity-70 leading-relaxed"
-                style={{ color: '#475569' }}
-                contentEditable={isEditing}
-                suppressContentEditableWarning
-              >
-                {feature.description}
-              </p>
-
-              {/* Hover Accent */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-b-2xl" />
-            </div>
-          ))}
-        </div>
+        {/* Render by variant */}
+        {variant === 'list' ? renderList() : variant === 'icons' ? renderIcons() : renderGrid()}
       </div>
     </section>
   );

@@ -10,8 +10,10 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
     }
   };
 
+  const background = styles.useGradient ? (styles.backgroundGradient || styles.backgroundColor) : styles.backgroundColor;
+
   const sectionStyle = {
-    background: styles.backgroundGradient || styles.backgroundColor,
+    background,
     padding: styles.padding,
     minHeight: styles.minHeight,
   };

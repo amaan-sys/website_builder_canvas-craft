@@ -456,6 +456,156 @@ export const createStatusPage = () => ({
   footer: createDefaultFooter(),
 });
 
+export const createDefaultContentSection = (title, content) => ({
+  id: uuidv4(),
+  type: 'content',
+  name: 'Content',
+  visible: true,
+  locked: false,
+  styles: {
+    backgroundColor: '#ffffff',
+    padding: '80px 0',
+    headingColor: '#0f172a',
+    paragraphColor: '#475569',
+  },
+  content: {
+    title,
+    lastUpdated: 'Last updated: January 1, 2024',
+    sections: content || [],
+  },
+  components: [],
+});
+
+export const createPrivacyPolicyPage = () => ({
+  id: uuidv4(),
+  name: 'Privacy Policy',
+  slug: '/privacy',
+  navbar: createDefaultNavbar(),
+  sections: [
+    createDefaultContentSection('Privacy Policy', [
+      {
+        id: uuidv4(),
+        heading: 'Information We Collect',
+        content: 'We collect information that you provide directly to us, such as when you create an account, make a purchase, or contact us for support. This may include your name, email address, phone number, and payment information.',
+        listItems: [
+          'Personal information you provide when creating an account',
+          'Payment and billing information',
+          'Communications with our support team',
+          'Usage data and analytics',
+        ],
+      },
+      {
+        id: uuidv4(),
+        heading: 'How We Use Your Information',
+        content: 'We use the information we collect to provide, maintain, and improve our services, process transactions, send you technical notices and support messages, and respond to your comments and questions.',
+        listItems: [
+          'To provide and maintain our services',
+          'To process your transactions',
+          'To send you updates and support messages',
+          'To improve our services and user experience',
+        ],
+      },
+      {
+        id: uuidv4(),
+        heading: 'Information Sharing',
+        content: 'We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:',
+        listItems: [
+          'With your consent',
+          'To comply with legal obligations',
+          'To protect our rights and safety',
+          'With service providers who assist us in operating our services',
+        ],
+      },
+      {
+        id: uuidv4(),
+        heading: 'Data Security',
+        content: 'We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.',
+      },
+      {
+        id: uuidv4(),
+        heading: 'Your Rights',
+        content: 'You have the right to access, update, or delete your personal information at any time. You can also opt-out of certain communications from us.',
+      },
+      {
+        id: uuidv4(),
+        heading: 'Contact Us',
+        content: 'If you have any questions about this Privacy Policy, please contact us at privacy@example.com.',
+      },
+    ]),
+  ],
+  footer: createDefaultFooter(),
+});
+
+export const createTermsOfServicePage = () => ({
+  id: uuidv4(),
+  name: 'Terms of Service',
+  slug: '/terms',
+  navbar: createDefaultNavbar(),
+  sections: [
+    createDefaultContentSection('Terms of Service', [
+      {
+        id: uuidv4(),
+        heading: 'Acceptance of Terms',
+        content: 'By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use our services.',
+      },
+      {
+        id: uuidv4(),
+        heading: 'Use License',
+        content: 'Permission is granted to temporarily access the materials on our website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:',
+        listItems: [
+          'Modify or copy the materials',
+          'Use the materials for any commercial purpose',
+          'Attempt to reverse engineer any software',
+          'Remove any copyright or proprietary notations',
+        ],
+      },
+      {
+        id: uuidv4(),
+        heading: 'User Accounts',
+        content: 'You are responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all activities that occur under your account.',
+        listItems: [
+          'You must provide accurate and complete information',
+          'You are responsible for maintaining account security',
+          'You must notify us immediately of any unauthorized use',
+          'We reserve the right to suspend or terminate accounts',
+        ],
+      },
+      {
+        id: uuidv4(),
+        heading: 'Prohibited Uses',
+        content: 'You may not use our services:',
+        listItems: [
+          'In any way that violates any applicable law',
+          'To transmit any malicious code or viruses',
+          'To collect or harvest information about other users',
+          'To impersonate any person or entity',
+        ],
+      },
+      {
+        id: uuidv4(),
+        heading: 'Intellectual Property',
+        content: 'All content, features, and functionality of our services are owned by us and are protected by international copyright, trademark, and other intellectual property laws.',
+      },
+      {
+        id: uuidv4(),
+        heading: 'Limitation of Liability',
+        content: 'In no event shall we be liable for any damages arising out of the use or inability to use our services, even if we have been advised of the possibility of such damages.',
+      },
+      {
+        id: uuidv4(),
+        heading: 'Changes to Terms',
+        content: 'We reserve the right to modify these terms at any time. Your continued use of our services after any changes constitutes acceptance of the new terms.',
+      },
+      {
+        id: uuidv4(),
+        heading: 'Contact Information',
+        content: 'If you have any questions about these Terms of Service, please contact us at legal@example.com.',
+      },
+    ]),
+  ],
+  footer: createDefaultFooter(),
+});
+
 export const getDefaultPage = () => ({ 
   id: uuidv4(),
   name: 'Home',

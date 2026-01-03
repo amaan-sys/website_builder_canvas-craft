@@ -11,6 +11,7 @@ import { StatsSection } from './StatsSection';
 import { TeamSection } from './TeamSection';
 import { FAQSection } from './FAQSection';
 import { LogoCloudSection } from './LogoCloudSection';
+import { ContentSection } from './ContentSection';
 
 export function SectionRenderer({ section, isSelected, isEditing, onContentChange }) {
   const commonProps = { section, isSelected, isEditing, onContentChange };
@@ -27,6 +28,7 @@ export function SectionRenderer({ section, isSelected, isEditing, onContentChang
     case 'team': return <TeamSection {...commonProps} />;
     case 'faq': return <FAQSection {...commonProps} />;
     case 'logocloud': return <LogoCloudSection {...commonProps} />;
+    case 'content': return <ContentSection {...commonProps} />;
     default: {
       const background = section.styles.useGradient ? (section.styles.backgroundGradient || section.styles.backgroundColor) : (section.styles.backgroundColor || '#f8fafc');
       return <div className={`p-20 text-center ${isSelected ? 'ring-2 ring-primary' : ''}`} style={{ background, padding: section.styles.padding }}><p className="text-muted-foreground">Custom Section: {section.name}</p></div>;

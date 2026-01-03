@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
 import { useBuilder } from '@/contexts/BuilderContext';
-import { createDefaultHeroSection, createDefaultCTASection, createDefaultFooter, createDefaultNavbar, createFeaturesPage, createServicesPage, createPricingPage, createContactPage, createStartPage, createTemplatesPage, createAboutPage, createBlogPage, createCareersPage, createHelpPage, createStatusPage } from '@/lib/defaultPageData';
+import { createDefaultHeroSection, createDefaultCTASection, createDefaultFooter, createDefaultNavbar, createFeaturesPage, createServicesPage, createPricingPage, createContactPage, createStartPage, createTemplatesPage, createAboutPage, createBlogPage, createCareersPage, createHelpPage, createStatusPage, createPrivacyPolicyPage, createTermsOfServicePage } from '@/lib/defaultPageData';
 import {
   Facebook,
   Twitter,
@@ -155,6 +155,8 @@ export function FooterPreview({ config, isEditing, onUpdate }) {
                               case '/careers': newPage = createCareersPage(); break;
                               case '/help': newPage = createHelpPage(); break;
                               case '/status': newPage = createStatusPage(); break;
+                              case '/privacy': newPage = createPrivacyPolicyPage(); break;
+                              case '/terms': newPage = createTermsOfServicePage(); break;
                               default:
                                 newPage = {
                                   id: (Math.random()+1).toString(36).substring(7),
@@ -229,22 +231,42 @@ export function FooterPreview({ config, isEditing, onUpdate }) {
 
           <div className="flex gap-6 text-sm opacity-60">
             <a 
-              href="#" 
+              href="/privacy" 
               className="hover:opacity-100 transition-opacity"
               style={{ color: config.styles.textColor }}
-              contentEditable={isEditing}
-              suppressContentEditableWarning
-              onBlur={(e) => onUpdate({ privacyPolicy: e.target.innerText })}
+              onClick={(e) => {
+                e.preventDefault();
+                const target = pages.find(p => p.slug === '/privacy');
+                if (target) {
+                  setActivePage(target.id);
+                } else {
+                  const newPage = createPrivacyPolicyPage();
+                  createPage(newPage);
+                }
+                if (!isEditing) {
+                  navigate('/privacy', { replace: true });
+                }
+              }}
             >
               {config.privacyPolicy || 'Privacy Policy'}
             </a>
             <a 
-              href="#" 
+              href="/terms" 
               className="hover:opacity-100 transition-opacity"
               style={{ color: config.styles.textColor }}
-              contentEditable={isEditing}
-              suppressContentEditableWarning
-              onBlur={(e) => onUpdate({ termsOfService: e.target.innerText })}
+              onClick={(e) => {
+                e.preventDefault();
+                const target = pages.find(p => p.slug === '/terms');
+                if (target) {
+                  setActivePage(target.id);
+                } else {
+                  const newPage = createTermsOfServicePage();
+                  createPage(newPage);
+                }
+                if (!isEditing) {
+                  navigate('/terms', { replace: true });
+                }
+              }}
             >
               {config.termsOfService || 'Terms of Service'}
             </a>

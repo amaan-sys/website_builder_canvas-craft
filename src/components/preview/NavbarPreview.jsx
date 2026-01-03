@@ -51,6 +51,8 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
           case '/careers': newPage = createCareersPage(); break;
           case '/help': newPage = createHelpPage(); break;
           case '/status': newPage = createStatusPage(); break;
+          case '/privacy': newPage = createPrivacyPolicyPage(); break;
+          case '/terms': newPage = createTermsOfServicePage(); break;
           default:
             newPage = {
               id: uuidv4(),

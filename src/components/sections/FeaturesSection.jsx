@@ -11,6 +11,10 @@ export function FeaturesSection({ section, isSelected, isEditing, onContentChang
   };
 
   const background = styles.useGradient ? (styles.backgroundGradient || styles.backgroundColor) : (styles.backgroundColor || '#ffffff');
+  
+  // Get text colors with fallbacks
+  const headingColor = styles.headingColor || '#0f172a';
+  const paragraphColor = styles.paragraphColor || '#475569';
 
   const sectionStyle = {
     background,
@@ -48,7 +52,7 @@ export function FeaturesSection({ section, isSelected, isEditing, onContentChang
           {/* Content */}
           <h3 
             className="text-xl font-bold mb-3"
-            style={{ color: '#0f172a' }}
+            style={{ color: headingColor }}
             contentEditable={isEditing}
             suppressContentEditableWarning
             onBlur={(e) => {
@@ -61,7 +65,7 @@ export function FeaturesSection({ section, isSelected, isEditing, onContentChang
           </h3>
           <p 
             className="opacity-70 leading-relaxed"
-            style={{ color: '#475569' }}
+            style={{ color: paragraphColor }}
             contentEditable={isEditing}
             suppressContentEditableWarning
             onBlur={(e) => {
@@ -86,8 +90,32 @@ export function FeaturesSection({ section, isSelected, isEditing, onContentChang
         <div key={feature.id} className="flex items-start gap-4">
           <div className="w-12 h-12 flex items-center justify-center rounded-md bg-primary text-white">{getIcon(feature.icon)}</div>
           <div>
-            <h3 contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => { if (!isEditing || !onContentChange) return; const updated = content.features.map((f) => f.id === feature.id ? { ...f, title: e.currentTarget.textContent } : f); onContentChange('features', updated); }}>{feature.title}</h3>
-            <p contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => { if (!isEditing || !onContentChange) return; const updated = content.features.map((f) => f.id === feature.id ? { ...f, description: e.currentTarget.textContent } : f); onContentChange('features', updated); }} className="text-sm text-muted-foreground">{feature.description}</p>
+            <h3 
+              className="font-semibold"
+              style={{ color: headingColor }}
+              contentEditable={isEditing} 
+              suppressContentEditableWarning 
+              onBlur={(e) => { 
+                if (!isEditing || !onContentChange) return; 
+                const updated = content.features.map((f) => f.id === feature.id ? { ...f, title: e.currentTarget.textContent } : f); 
+                onContentChange('features', updated); 
+              }}
+            >
+              {feature.title}
+            </h3>
+            <p 
+              className="text-sm"
+              style={{ color: paragraphColor }}
+              contentEditable={isEditing} 
+              suppressContentEditableWarning 
+              onBlur={(e) => { 
+                if (!isEditing || !onContentChange) return; 
+                const updated = content.features.map((f) => f.id === feature.id ? { ...f, description: e.currentTarget.textContent } : f); 
+                onContentChange('features', updated); 
+              }}
+            >
+              {feature.description}
+            </p>
           </div>
         </div>
       ))}
@@ -99,7 +127,74 @@ export function FeaturesSection({ section, isSelected, isEditing, onContentChang
       {content.features?.map((feature) => (
         <div key={feature.id} className="flex flex-col items-center text-center p-6 bg-white rounded-lg shadow-sm">
           <div className="w-20 h-20 rounded-lg flex items-center justify-center bg-primary text-white mb-4">{getIcon(feature.icon)}</div>
-          <h4 contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => { if (!isEditing || !onContentChange) return; const updated = content.features.map((f) => f.id === feature.id ? { ...f, title: e.currentTarget.textContent } : f); onContentChange('features', updated); }}>{feature.title}</h4>
+          <h4 
+            className="font-semibold"
+            style={{ color: headingColor }}
+            contentEditable={isEditing} 
+            suppressContentEditableWarning 
+            onBlur={(e) => { 
+              if (!isEditing || !onContentChange) return; 
+              const updated = content.features.map((f) => f.id === feature.id ? { ...f, title: e.currentTarget.textContent } : f); 
+              onContentChange('features', updated); 
+            }}
+          >
+            {feature.title}
+          </h4>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderCards = () => (
+    <div className="space-y-6 max-w-4xl mx-auto">
+      {content.features?.map((feature, index) => (
+        <div 
+          key={feature.id}
+          className="group relative p-6 rounded-xl transition-all duration-300 hover:shadow-lg"
+          style={{ 
+            background: index % 2 === 0 ? '#ffffff' : '#f8fafc',
+            border: '1px solid #e2e8f0'
+          }}
+        >
+          <div className="flex items-start gap-6">
+            <div 
+              className="w-14 h-14 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+              style={{ 
+                background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+                color: '#ffffff'
+              }}
+            >
+              {getIcon(feature.icon)}
+            </div>
+            <div className="flex-1">
+              <h3 
+                className="text-xl font-bold mb-2"
+                style={{ color: headingColor }}
+                contentEditable={isEditing}
+                suppressContentEditableWarning
+                onBlur={(e) => {
+                  if (!isEditing || !onContentChange) return;
+                  const updated = content.features.map((f) => f.id === feature.id ? { ...f, title: e.currentTarget.textContent } : f);
+                  onContentChange('features', updated);
+                }}
+              >
+                {feature.title}
+              </h3>
+              <p 
+                className="opacity-70 leading-relaxed"
+                style={{ color: paragraphColor }}
+                contentEditable={isEditing}
+                suppressContentEditableWarning
+                onBlur={(e) => {
+                  if (!isEditing || !onContentChange) return;
+                  const updated = content.features.map((f) => f.id === feature.id ? { ...f, description: e.currentTarget.textContent } : f);
+                  onContentChange('features', updated);
+                }}
+              >
+                {feature.description}
+              </p>
+            </div>
+          </div>
         </div>
       ))}
     </div>
@@ -115,7 +210,7 @@ export function FeaturesSection({ section, isSelected, isEditing, onContentChang
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 
             className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
-            style={{ color: '#0f172a' }}
+            style={{ color: headingColor }}
             contentEditable={isEditing}
             suppressContentEditableWarning
             onBlur={(e) => handleTextEdit('headline', e)}
@@ -124,7 +219,7 @@ export function FeaturesSection({ section, isSelected, isEditing, onContentChang
           </h2>
           <p 
             className="text-lg opacity-70"
-            style={{ color: '#475569' }}
+            style={{ color: paragraphColor }}
             contentEditable={isEditing}
             suppressContentEditableWarning
             onBlur={(e) => handleTextEdit('subheadline', e)}
@@ -134,7 +229,7 @@ export function FeaturesSection({ section, isSelected, isEditing, onContentChang
         </div>
 
         {/* Render by variant */}
-        {variant === 'list' ? renderList() : variant === 'icons' ? renderIcons() : renderGrid()}
+        {variant === 'list' ? renderList() : variant === 'icons' ? renderIcons() : variant === 'cards' ? renderCards() : renderGrid()}
       </div>
     </section>
   );

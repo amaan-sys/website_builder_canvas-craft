@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 export function NavbarPreview({ config, isEditing, onUpdate }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const { pages, setActivePage, updatePageName, createPage } = useBuilder();
+  const { pages, setActivePage, updatePageName, createPage, selectSection } = useBuilder();
 
   /* ------------------------------
      NAVBAR STYLES (dynamic)
@@ -78,12 +78,20 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
     }
   };
 
+  const handleNavbarClick = (e) => {
+    if (isEditing && e.target.closest('a, button') === null) {
+      e.stopPropagation();
+      selectSection(null);
+    }
+  };
+
   return (
     <nav
       className={`${
         config.styles.sticky ? 'sticky top-0' : 'relative'
-      } z-50 backdrop-blur-md`}
+      } z-50 backdrop-blur-md ${isEditing ? 'cursor-pointer' : ''}`}
       style={navStyle}
+      onClick={handleNavbarClick}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
@@ -100,7 +108,8 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
               />
             ) : (
               <span
-                className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+                className="text-xl md:text-2xl font-bold"
+                style={{ color: config.styles.textColor }}
                 contentEditable={isEditing}
                 suppressContentEditableWarning
                 onBlur={(e) =>
@@ -170,6 +179,7 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
           ===================================================== */}
           <button
             className="md:hidden p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            style={{ color: config.styles.textColor }}
             onClick={() => setMobileMenuOpen((prev) => !prev)}
             aria-label="Toggle Menu"
           >

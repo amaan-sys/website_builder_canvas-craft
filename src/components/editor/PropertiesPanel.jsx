@@ -10,12 +10,119 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { getVariantsForSection } from '@/lib/sectionVariants';
 
 export function PropertiesPanel() {
-  const { state, selectedSection, updateSection, updateSectionStyles, selectSection } = useBuilder();
+  const { state, selectedSection, updateSection, updateSectionStyles, selectSection, updateNavbar, updateFooter } = useBuilder();
   const [contentOpen, setContentOpen] = React.useState(true);
   const [stylesOpen, setStylesOpen] = React.useState(true);
   const [layoutOpen, setLayoutOpen] = React.useState(true);
+  const [navbarOpen, setNavbarOpen] = React.useState(false);
+  const [footerOpen, setFooterOpen] = React.useState(false);
   const variants = selectedSection ? getVariantsForSection(selectedSection.type) : [];
-  if (!selectedSection) return <div className="h-full flex flex-col items-center justify-center p-8 text-center"><Settings2 className="w-12 h-12 text-muted-foreground/50 mb-4" /><h3 className="font-medium mb-2">No Section Selected</h3><p className="text-sm text-muted-foreground">Click on a section to edit</p></div>;
+  
+  // Show navbar/footer controls when no section is selected
+  if (!selectedSection) {
+    const { page } = state;
+    return (
+      <div className="h-full flex flex-col">
+        <div className="p-4 border-b border-border">
+          <h2 className="font-semibold">Page Settings</h2>
+          <p className="text-xs text-muted-foreground">Edit navbar and footer</p>
+        </div>
+        <div className="flex-1 overflow-y-auto scrollbar-thin">
+          <Collapsible open={navbarOpen} onOpenChange={setNavbarOpen} className="border-b border-border">
+            <CollapsibleTrigger className="w-full p-4 flex items-center justify-between hover:bg-secondary/50">
+              <div className="flex items-center gap-2">
+                <Palette className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium">Navbar</span>
+              </div>
+              <ChevronDown className={`w-4 h-4 transition-transform ${navbarOpen ? 'rotate-180' : ''}`} />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="p-4 pt-0 space-y-4">
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Background Color</Label>
+                <div className="flex gap-2">
+                  <input 
+                    type="color" 
+                    value={page.navbar?.styles?.backgroundColor || '#0f172a'} 
+                    onChange={(e) => updateNavbar({ styles: { ...page.navbar.styles, backgroundColor: e.target.value } })} 
+                    className="w-10 h-10 rounded-lg border border-border cursor-pointer" 
+                  />
+                  <Input 
+                    value={page.navbar?.styles?.backgroundColor || ''} 
+                    onChange={(e) => updateNavbar({ styles: { ...page.navbar.styles, backgroundColor: e.target.value } })} 
+                    className="bg-secondary border-border flex-1" 
+                    placeholder="#0f172a" 
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Text Color</Label>
+                <div className="flex gap-2">
+                  <input 
+                    type="color" 
+                    value={page.navbar?.styles?.textColor || '#ffffff'} 
+                    onChange={(e) => updateNavbar({ styles: { ...page.navbar.styles, textColor: e.target.value } })} 
+                    className="w-10 h-10 rounded-lg border border-border cursor-pointer" 
+                  />
+                  <Input 
+                    value={page.navbar?.styles?.textColor || ''} 
+                    onChange={(e) => updateNavbar({ styles: { ...page.navbar.styles, textColor: e.target.value } })} 
+                    className="bg-secondary border-border flex-1" 
+                    placeholder="#ffffff" 
+                  />
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+          
+          <Collapsible open={footerOpen} onOpenChange={setFooterOpen} className="border-b border-border">
+            <CollapsibleTrigger className="w-full p-4 flex items-center justify-between hover:bg-secondary/50">
+              <div className="flex items-center gap-2">
+                <Palette className="w-4 h-4 text-accent" />
+                <span className="text-sm font-medium">Footer</span>
+              </div>
+              <ChevronDown className={`w-4 h-4 transition-transform ${footerOpen ? 'rotate-180' : ''}`} />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="p-4 pt-0 space-y-4">
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Background Color</Label>
+                <div className="flex gap-2">
+                  <input 
+                    type="color" 
+                    value={page.footer?.styles?.backgroundColor || '#0f172a'} 
+                    onChange={(e) => updateFooter({ styles: { ...page.footer.styles, backgroundColor: e.target.value } })} 
+                    className="w-10 h-10 rounded-lg border border-border cursor-pointer" 
+                  />
+                  <Input 
+                    value={page.footer?.styles?.backgroundColor || ''} 
+                    onChange={(e) => updateFooter({ styles: { ...page.footer.styles, backgroundColor: e.target.value } })} 
+                    className="bg-secondary border-border flex-1" 
+                    placeholder="#0f172a" 
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Text Color</Label>
+                <div className="flex gap-2">
+                  <input 
+                    type="color" 
+                    value={page.footer?.styles?.textColor || '#ffffff'} 
+                    onChange={(e) => updateFooter({ styles: { ...page.footer.styles, textColor: e.target.value } })} 
+                    className="w-10 h-10 rounded-lg border border-border cursor-pointer" 
+                  />
+                  <Input 
+                    value={page.footer?.styles?.textColor || ''} 
+                    onChange={(e) => updateFooter({ styles: { ...page.footer.styles, textColor: e.target.value } })} 
+                    className="bg-secondary border-border flex-1" 
+                    placeholder="#ffffff" 
+                  />
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </div>
+      </div>
+    );
+  }
 
   const handleContentChange = (field, value) => updateSection(selectedSection.id, { content: { ...selectedSection.content, [field]: value } });
   const handleStyleChange = (field, value) => updateSectionStyles(selectedSection.id, { [field]: value });
@@ -258,6 +365,54 @@ export function PropertiesPanel() {
               <Input value={selectedSection.styles.backgroundGradient || ''} onChange={(e) => handleStyleChange('backgroundGradient', e.target.value)} className="bg-secondary border-border" placeholder="linear-gradient(...)" />
             </div>
           )}
+
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground">Heading Color</Label>
+            <div className="flex gap-2">
+              <input type="color" value={selectedSection.styles.headingColor || '#0f172a'} onChange={(e) => handleStyleChange('headingColor', e.target.value)} className="w-10 h-10 rounded-lg border border-border cursor-pointer" />
+              <Input value={selectedSection.styles.headingColor || ''} onChange={(e) => handleStyleChange('headingColor', e.target.value)} className="bg-secondary border-border flex-1" placeholder="#0f172a" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground">Paragraph Color</Label>
+            <div className="flex gap-2">
+              <input type="color" value={selectedSection.styles.paragraphColor || '#64748b'} onChange={(e) => handleStyleChange('paragraphColor', e.target.value)} className="w-10 h-10 rounded-lg border border-border cursor-pointer" />
+              <Input value={selectedSection.styles.paragraphColor || ''} onChange={(e) => handleStyleChange('paragraphColor', e.target.value)} className="bg-secondary border-border flex-1" placeholder="#64748b" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground">Primary Button Background</Label>
+            <div className="flex gap-2">
+              <input type="color" value={selectedSection.styles.buttonPrimaryBg || '#3b82f6'} onChange={(e) => handleStyleChange('buttonPrimaryBg', e.target.value)} className="w-10 h-10 rounded-lg border border-border cursor-pointer" />
+              <Input value={selectedSection.styles.buttonPrimaryBg || ''} onChange={(e) => handleStyleChange('buttonPrimaryBg', e.target.value)} className="bg-secondary border-border flex-1" placeholder="#3b82f6" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground">Primary Button Text</Label>
+            <div className="flex gap-2">
+              <input type="color" value={selectedSection.styles.buttonPrimaryText || '#ffffff'} onChange={(e) => handleStyleChange('buttonPrimaryText', e.target.value)} className="w-10 h-10 rounded-lg border border-border cursor-pointer" />
+              <Input value={selectedSection.styles.buttonPrimaryText || ''} onChange={(e) => handleStyleChange('buttonPrimaryText', e.target.value)} className="bg-secondary border-border flex-1" placeholder="#ffffff" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground">Secondary Button Background</Label>
+            <div className="flex gap-2">
+              <input type="color" value={selectedSection.styles.buttonSecondaryBg || 'transparent'} onChange={(e) => handleStyleChange('buttonSecondaryBg', e.target.value)} className="w-10 h-10 rounded-lg border border-border cursor-pointer" />
+              <Input value={selectedSection.styles.buttonSecondaryBg || ''} onChange={(e) => handleStyleChange('buttonSecondaryBg', e.target.value)} className="bg-secondary border-border flex-1" placeholder="transparent" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground">Secondary Button Text</Label>
+            <div className="flex gap-2">
+              <input type="color" value={selectedSection.styles.buttonSecondaryText || '#ffffff'} onChange={(e) => handleStyleChange('buttonSecondaryText', e.target.value)} className="w-10 h-10 rounded-lg border border-border cursor-pointer" />
+              <Input value={selectedSection.styles.buttonSecondaryText || ''} onChange={(e) => handleStyleChange('buttonSecondaryText', e.target.value)} className="bg-secondary border-border flex-1" placeholder="#ffffff" />
+            </div>
+          </div>
 
           <div className="space-y-2">
             <Label className="text-xs text-muted-foreground">Padding</Label>

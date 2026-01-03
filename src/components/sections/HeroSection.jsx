@@ -11,6 +11,16 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
   };
 
   const background = styles.useGradient ? (styles.backgroundGradient || styles.backgroundColor) : styles.backgroundColor;
+  
+  // Get text colors with fallbacks (default to white/light for hero sections)
+  const headingColor = styles.headingColor || '#ffffff';
+  const paragraphColor = styles.paragraphColor || '#e2e8f0';
+  
+  // Get button colors with fallbacks
+  const buttonPrimaryBg = styles.buttonPrimaryBg || 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)';
+  const buttonPrimaryText = styles.buttonPrimaryText || '#ffffff';
+  const buttonSecondaryBg = styles.buttonSecondaryBg || 'transparent';
+  const buttonSecondaryText = styles.buttonSecondaryText || '#ffffff';
 
   const sectionStyle = {
     background,
@@ -38,7 +48,7 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
           <div className="max-w-4xl space-y-8 animate-fade-in">
             <h1 
               className="text-4xl md:text-5xl lg:text-7xl font-bold leading-tight"
-              style={{ color: '#ffffff' }}
+              style={{ color: headingColor }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={(e) => handleTextEdit('headline', e)}
@@ -48,7 +58,7 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
             
             <p 
               className="text-lg md:text-xl lg:text-2xl opacity-80 max-w-2xl mx-auto"
-              style={{ color: '#e2e8f0' }}
+              style={{ color: paragraphColor }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={(e) => handleTextEdit('subheadline', e)}
@@ -60,8 +70,8 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
               <button 
                 className="group px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-glow flex items-center gap-2"
                 style={{ 
-                  background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
-                  color: '#ffffff'
+                  background: buttonPrimaryBg,
+                  color: buttonPrimaryText
                 }}
               >
                 <span
@@ -77,8 +87,9 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
               <button 
                 className="group px-8 py-4 rounded-xl font-semibold text-lg border-2 transition-all duration-300 hover:bg-white/10 flex items-center gap-2"
                 style={{ 
+                  background: buttonSecondaryBg,
                   borderColor: 'rgba(255,255,255,0.3)',
-                  color: '#ffffff'
+                  color: buttonSecondaryText
                 }}
               >
                 <Play className="w-5 h-5" />
@@ -139,7 +150,7 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
           <div className="max-w-4xl space-y-8 animate-fade-in">
             <h1 
               className="text-4xl md:text-5xl lg:text-7xl font-bold leading-tight drop-shadow-2xl"
-              style={{ color: '#ffffff' }}
+              style={{ color: headingColor }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={(e) => handleTextEdit('headline', e)}
@@ -149,7 +160,7 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
             
             <p 
               className="text-lg md:text-xl lg:text-2xl opacity-90 max-w-2xl mx-auto drop-shadow-lg"
-              style={{ color: '#e2e8f0' }}
+              style={{ color: paragraphColor }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={(e) => handleTextEdit('subheadline', e)}
@@ -159,8 +170,11 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
 
             <div className="flex flex-wrap justify-center gap-4">
               <button 
-                className="group px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30"
-                style={{ color: '#ffffff' }}
+                className="group px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2 backdrop-blur-sm border border-white/30"
+                style={{ 
+                  background: buttonPrimaryBg,
+                  color: buttonPrimaryText
+                }}
               >
                 <span
                   contentEditable={isEditing}
@@ -175,8 +189,9 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
               <button 
                 className="group px-8 py-4 rounded-full font-semibold text-lg border-2 transition-all duration-300 hover:bg-white hover:text-black flex items-center gap-2"
                 style={{ 
+                  background: buttonSecondaryBg,
                   borderColor: '#ffffff',
-                  color: '#ffffff'
+                  color: buttonSecondaryText
                 }}
               >
                 <Play className="w-5 h-5" />
@@ -208,7 +223,7 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
           <div className="max-w-3xl space-y-6">
             <h1 
               className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight"
-              style={{ color: '#ffffff' }}
+              style={{ color: headingColor }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={(e) => handleTextEdit('headline', e)}
@@ -218,7 +233,7 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
             
             <p 
               className="text-base md:text-lg opacity-70 max-w-xl"
-              style={{ color: '#e2e8f0' }}
+              style={{ color: paragraphColor }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={(e) => handleTextEdit('subheadline', e)}
@@ -230,8 +245,8 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
               <button 
                 className="px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
                 style={{ 
-                  background: '#3b82f6',
-                  color: '#ffffff'
+                  background: buttonPrimaryBg,
+                  color: buttonPrimaryText
                 }}
               >
                 <span
@@ -246,7 +261,10 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
               
               <button 
                 className="px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-white/10 flex items-center gap-2"
-                style={{ color: '#ffffff' }}
+                style={{ 
+                  background: buttonSecondaryBg,
+                  color: buttonSecondaryText
+                }}
               >
                 <span
                   contentEditable={isEditing}
@@ -292,7 +310,7 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
             
             <p 
               className="text-xl md:text-2xl opacity-80 max-w-2xl mx-auto"
-              style={{ color: '#e2e8f0' }}
+              style={{ color: paragraphColor }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={(e) => handleTextEdit('subheadline', e)}
@@ -302,7 +320,11 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
 
             <div className="flex flex-wrap justify-center gap-4 pt-4">
               <button 
-                className="group px-10 py-5 rounded-2xl font-bold text-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-3 bg-white text-gray-900 shadow-2xl hover:shadow-white/25"
+                className="group px-10 py-5 rounded-2xl font-bold text-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-3 shadow-2xl hover:shadow-white/25"
+                style={{ 
+                  background: buttonPrimaryBg,
+                  color: buttonPrimaryText
+                }}
               >
                 <span
                   contentEditable={isEditing}
@@ -316,7 +338,10 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
               
               <button 
                 className="group px-10 py-5 rounded-2xl font-bold text-xl border-2 border-white/20 transition-all duration-300 hover:bg-white/10 flex items-center gap-3 backdrop-blur-sm"
-                style={{ color: '#ffffff' }}
+                style={{ 
+                  background: buttonSecondaryBg,
+                  color: buttonSecondaryText
+                }}
               >
                 <Play className="w-6 h-6" />
                 <span
@@ -356,7 +381,7 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
           <div className="space-y-8 animate-fade-in">
             <h1 
               className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
-              style={{ color: '#ffffff' }}
+              style={{ color: headingColor }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={(e) => handleTextEdit('headline', e)}
@@ -366,7 +391,7 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
             
             <p 
               className="text-lg md:text-xl opacity-80 max-w-lg"
-              style={{ color: '#e2e8f0' }}
+              style={{ color: paragraphColor }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={(e) => handleTextEdit('subheadline', e)}
@@ -378,8 +403,8 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
               <button 
                 className="group px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-glow flex items-center gap-2"
                 style={{ 
-                  background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
-                  color: '#ffffff'
+                  background: buttonPrimaryBg,
+                  color: buttonPrimaryText
                 }}
               >
                 <span
@@ -395,8 +420,9 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
               <button 
                 className="group px-8 py-4 rounded-xl font-semibold text-lg border-2 transition-all duration-300 hover:bg-white/10 flex items-center gap-2"
                 style={{ 
+                  background: buttonSecondaryBg,
                   borderColor: 'rgba(255,255,255,0.3)',
-                  color: '#ffffff'
+                  color: buttonSecondaryText
                 }}
               >
                 <Play className="w-5 h-5" />
@@ -412,14 +438,48 @@ export function HeroSection({ section, isSelected, isEditing, onContentChange })
 
             {/* Stats */}
             <div className="flex gap-8 pt-8 border-t border-white/10">
-              {[
+              {(content.stats || [
                 { value: '10K+', label: 'Users' },
                 { value: '50K+', label: 'Websites' },
                 { value: '99%', label: 'Uptime' },
-              ].map((stat, i) => (
+              ]).map((stat, i) => (
                 <div key={i} className="text-center">
-                  <div className="text-2xl font-bold" style={{ color: '#ffffff' }}>{stat.value}</div>
-                  <div className="text-sm opacity-60" style={{ color: '#e2e8f0' }}>{stat.label}</div>
+                  <div 
+                    className="text-2xl font-bold" 
+                    style={{ color: headingColor }}
+                    contentEditable={isEditing}
+                    suppressContentEditableWarning
+                    onBlur={(e) => {
+                      if (!isEditing || !onContentChange) return;
+                      const updated = [...(content.stats || [
+                        { value: '10K+', label: 'Users' },
+                        { value: '50K+', label: 'Websites' },
+                        { value: '99%', label: 'Uptime' },
+                      ])];
+                      updated[i] = { ...updated[i], value: e.currentTarget.textContent };
+                      handleTextEdit('stats', updated);
+                    }}
+                  >
+                    {stat.value}
+                  </div>
+                  <div 
+                    className="text-sm opacity-60" 
+                    style={{ color: paragraphColor }}
+                    contentEditable={isEditing}
+                    suppressContentEditableWarning
+                    onBlur={(e) => {
+                      if (!isEditing || !onContentChange) return;
+                      const updated = [...(content.stats || [
+                        { value: '10K+', label: 'Users' },
+                        { value: '50K+', label: 'Websites' },
+                        { value: '99%', label: 'Uptime' },
+                      ])];
+                      updated[i] = { ...updated[i], label: e.currentTarget.textContent };
+                      handleTextEdit('stats', updated);
+                    }}
+                  >
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>

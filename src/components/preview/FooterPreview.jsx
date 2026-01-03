@@ -22,15 +22,26 @@ const socialIcons = {
 
 export function FooterPreview({ config, isEditing, onUpdate }) {
   const navigate = useNavigate();
-  const { updatePageName, pages, setActivePage, createPage } = useBuilder();
+  const { updatePageName, pages, setActivePage, createPage, selectSection } = useBuilder();
 
   const footerStyle = {
     backgroundColor: config.styles.backgroundColor,
     color: config.styles.textColor,
   };
 
+  const handleFooterClick = (e) => {
+    if (isEditing && e.target.closest('a, button') === null) {
+      e.stopPropagation();
+      selectSection(null);
+    }
+  };
+
   return (
-    <footer className="relative" style={footerStyle}>
+    <footer 
+      className={`relative ${isEditing ? 'cursor-pointer' : ''}`} 
+      style={footerStyle}
+      onClick={handleFooterClick}
+    >
       <div className="container mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
 
@@ -42,7 +53,8 @@ export function FooterPreview({ config, isEditing, onUpdate }) {
               <img src={config.logo.imageUrl} alt="Logo" className="h-10 mb-6" />
             ) : (
               <span
-                className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent block mb-6"
+                className="text-2xl font-bold block mb-6"
+                style={{ color: config.styles.textColor }}
                 contentEditable={isEditing}
                 suppressContentEditableWarning
                 onBlur={(e) =>
@@ -60,6 +72,7 @@ export function FooterPreview({ config, isEditing, onUpdate }) {
 
             <p
               className="opacity-60 max-w-sm mb-6"
+              style={{ color: config.styles.textColor }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={(e) =>
@@ -97,10 +110,10 @@ export function FooterPreview({ config, isEditing, onUpdate }) {
               {/* COLUMN TITLE (EDITABLE) */}
               <h4
                 className="font-semibold mb-4"
-                style={{ color: "#ffffff" }}
-                contentEditable={isEditing}                 // ⭐ NEW
-                suppressContentEditableWarning              // ⭐ NEW
-                onBlur={(e) =>                               // ⭐ NEW
+                style={{ color: config.styles.textColor }}
+                contentEditable={isEditing}
+                suppressContentEditableWarning
+                onBlur={(e) =>
                   onUpdate({
                     columns: config.columns.map((c) =>
                       c.id === column.id
@@ -161,9 +174,10 @@ export function FooterPreview({ config, isEditing, onUpdate }) {
                           }
                         }
                       }}
-                      className="opacity-60 hover:opacity-100 transition-opacity hover:text-primary"
-                      contentEditable={isEditing}            // ⭐ NEW
-                      suppressContentEditableWarning         // ⭐ NEW
+                      className="opacity-60 hover:opacity-100 transition-opacity"
+                      style={{ color: config.styles.textColor }}
+                      contentEditable={isEditing}
+                      suppressContentEditableWarning
                       onBlur={(e) => {
                       const newLabel = e.target.innerText;
                       onUpdate({
@@ -201,6 +215,7 @@ export function FooterPreview({ config, isEditing, onUpdate }) {
         <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p
             className="opacity-60 text-sm"
+            style={{ color: config.styles.textColor }}
             contentEditable={isEditing}
             suppressContentEditableWarning
             onBlur={(e) =>
@@ -213,11 +228,25 @@ export function FooterPreview({ config, isEditing, onUpdate }) {
           </p>
 
           <div className="flex gap-6 text-sm opacity-60">
-            <a href="#" className="hover:opacity-100 transition-opacity">
-              Privacy Policy
+            <a 
+              href="#" 
+              className="hover:opacity-100 transition-opacity"
+              style={{ color: config.styles.textColor }}
+              contentEditable={isEditing}
+              suppressContentEditableWarning
+              onBlur={(e) => onUpdate({ privacyPolicy: e.target.innerText })}
+            >
+              {config.privacyPolicy || 'Privacy Policy'}
             </a>
-            <a href="#" className="hover:opacity-100 transition-opacity">
-              Terms of Service
+            <a 
+              href="#" 
+              className="hover:opacity-100 transition-opacity"
+              style={{ color: config.styles.textColor }}
+              contentEditable={isEditing}
+              suppressContentEditableWarning
+              onBlur={(e) => onUpdate({ termsOfService: e.target.innerText })}
+            >
+              {config.termsOfService || 'Terms of Service'}
             </a>
           </div>
         </div>

@@ -7,6 +7,15 @@ export function PricingSection({ section, isSelected, isEditing, onContentChange
   const variant = section.variant || 'cards';
   const background = styles.useGradient ? (styles.backgroundGradient || styles.backgroundColor) : (styles.backgroundColor || '#f8fafc');
   const padding = styles.padding || '100px 0';
+  
+  // Get text colors with fallbacks
+  const headingColor = styles.headingColor || '#0f172a';
+  const paragraphColor = styles.paragraphColor || '#64748b';
+  
+  // Get button colors with fallbacks
+  const buttonPrimaryBg = styles.buttonPrimaryBg || '#0f172a';
+  const buttonPrimaryText = styles.buttonPrimaryText || '#ffffff';
+  
   const [annual, setAnnual] = useState(false);
 
   if (variant === 'table') {
@@ -71,7 +80,19 @@ export function PricingSection({ section, isSelected, isEditing, onContentChange
                   </div>
                 </div>
                 <ul className="space-y-4 mb-8">{(plan.features || []).map((feature, i) => (<li key={i} className="flex items-center gap-3"><div className={`w-5 h-5 rounded-full flex items-center justify-center ${plan.popular ? 'bg-white/20' : 'bg-green-100'}`}><Check className={`w-3 h-3 ${plan.popular ? 'text-white' : 'text-green-600'}`} /></div><span className={plan.popular ? 'text-white/90' : 'text-slate-600'}>{feature}</span></li>))}</ul>
-                <button className={`w-full py-4 rounded-xl font-semibold transition-all duration-200 ${plan.popular ? 'bg-white text-blue-600 hover:bg-slate-100' : 'bg-slate-900 text-white hover:bg-slate-800'}`}>{plan.ctaText || 'Get Started'}</button>
+                <button className={`w-full py-4 rounded-xl font-semibold transition-all duration-200 ${plan.popular ? 'hover:bg-slate-100' : 'hover:bg-slate-800'}`} style={{ background: plan.popular ? '#ffffff' : buttonPrimaryBg, color: plan.popular ? '#3b82f6' : buttonPrimaryText }}>
+                  <span
+                    contentEditable={isEditing}
+                    suppressContentEditableWarning
+                    onBlur={(e) => {
+                      if (!isEditing || !onContentChange) return;
+                      const updated = content.plans.map((p) => p.id === plan.id ? { ...p, ctaText: e.currentTarget.textContent } : p);
+                      onContentChange('plans', updated);
+                    }}
+                  >
+                    {plan.ctaText || 'Get Started'}
+                  </span>
+                </button>
               </div>
             ))}
           </div>
@@ -94,7 +115,7 @@ export function PricingSection({ section, isSelected, isEditing, onContentChange
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 
             className="text-4xl md:text-5xl font-bold mb-6"
-            style={{ color: '#0f172a' }}
+            style={{ color: headingColor }}
             contentEditable={isEditing}
             suppressContentEditableWarning
             onBlur={(e) => onContentChange?.('headline', e.currentTarget.textContent)}
@@ -103,7 +124,7 @@ export function PricingSection({ section, isSelected, isEditing, onContentChange
           </h2>
           <p 
             className="text-lg opacity-80"
-            style={{ color: '#64748b' }}
+            style={{ color: paragraphColor }}
             contentEditable={isEditing}
             suppressContentEditableWarning
             onBlur={(e) => onContentChange?.('subheadline', e.currentTarget.textContent)}
@@ -126,21 +147,70 @@ export function PricingSection({ section, isSelected, isEditing, onContentChange
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-sm font-medium rounded-full flex items-center gap-1">
                   <Sparkles className="w-4 h-4" />
-                  Most Popular
+                  <span
+                    contentEditable={isEditing}
+                    suppressContentEditableWarning
+                    onBlur={(e) => {
+                      if (!isEditing || !onContentChange) return;
+                      const updated = content.plans.map((p) => p.id === plan.id ? { ...p, popularLabel: e.currentTarget.textContent } : p);
+                      onContentChange('plans', updated);
+                    }}
+                  >
+                    {plan.popularLabel || 'Most Popular'}
+                  </span>
                 </div>
               )}
               <div className="text-center mb-8">
-                <h3 className={`text-xl font-bold mb-2 ${plan.popular ? 'text-white' : 'text-slate-900'}`}>
+                <h3 
+                  className={`text-xl font-bold mb-2 ${plan.popular ? 'text-white' : 'text-slate-900'}`}
+                  contentEditable={isEditing}
+                  suppressContentEditableWarning
+                  onBlur={(e) => {
+                    if (!isEditing || !onContentChange) return;
+                    const updated = content.plans.map((p) => p.id === plan.id ? { ...p, name: e.currentTarget.textContent } : p);
+                    onContentChange('plans', updated);
+                  }}
+                >
                   {plan.name}
                 </h3>
-                <p className={`text-sm mb-4 ${plan.popular ? 'text-white/80' : 'text-slate-500'}`}>
+                <p 
+                  className={`text-sm mb-4 ${plan.popular ? 'text-white/80' : 'text-slate-500'}`}
+                  contentEditable={isEditing}
+                  suppressContentEditableWarning
+                  onBlur={(e) => {
+                    if (!isEditing || !onContentChange) return;
+                    const updated = content.plans.map((p) => p.id === plan.id ? { ...p, description: e.currentTarget.textContent } : p);
+                    onContentChange('plans', updated);
+                  }}
+                >
                   {plan.description}
                 </p>
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className={`text-5xl font-bold ${plan.popular ? 'text-white' : 'text-slate-900'}`}>
+                  <span 
+                    className={`text-5xl font-bold ${plan.popular ? 'text-white' : 'text-slate-900'}`}
+                    contentEditable={isEditing}
+                    suppressContentEditableWarning
+                    onBlur={(e) => {
+                      if (!isEditing || !onContentChange) return;
+                      const priceText = e.currentTarget.textContent.replace('$', '').trim();
+                      const updated = content.plans.map((p) => p.id === plan.id ? { ...p, price: priceText } : p);
+                      onContentChange('plans', updated);
+                    }}
+                  >
                     ${plan.price}
                   </span>
-                  <span className={plan.popular ? 'text-white/70' : 'text-slate-400'}>/month</span>
+                  <span 
+                    className={plan.popular ? 'text-white/70' : 'text-slate-400'}
+                    contentEditable={isEditing}
+                    suppressContentEditableWarning
+                    onBlur={(e) => {
+                      if (!isEditing || !onContentChange) return;
+                      const updated = content.plans.map((p) => p.id === plan.id ? { ...p, pricePeriod: e.currentTarget.textContent } : p);
+                      onContentChange('plans', updated);
+                    }}
+                  >
+                    {plan.pricePeriod || '/month'}
+                  </span>
                 </div>
               </div>
               <ul className="space-y-4 mb-8">
@@ -151,18 +221,45 @@ export function PricingSection({ section, isSelected, isEditing, onContentChange
                     }`}>
                       <Check className={`w-3 h-3 ${plan.popular ? 'text-white' : 'text-green-600'}`} />
                     </div>
-                    <span className={plan.popular ? 'text-white/90' : 'text-slate-600'}>{feature}</span>
+                    <span 
+                      className={plan.popular ? 'text-white/90' : 'text-slate-600'}
+                      contentEditable={isEditing}
+                      suppressContentEditableWarning
+                      onBlur={(e) => {
+                        if (!isEditing || !onContentChange) return;
+                        const updatedFeatures = [...(plan.features || [])];
+                        updatedFeatures[i] = e.currentTarget.textContent;
+                        const updated = content.plans.map((p) => p.id === plan.id ? { ...p, features: updatedFeatures } : p);
+                        onContentChange('plans', updated);
+                      }}
+                    >
+                      {feature}
+                    </span>
                   </li>
                 ))}
               </ul>
               <button
                 className={`w-full py-4 rounded-xl font-semibold transition-all duration-200 ${
                   plan.popular
-                    ? 'bg-white text-blue-600 hover:bg-slate-100'
-                    : 'bg-slate-900 text-white hover:bg-slate-800'
+                    ? 'hover:bg-slate-100'
+                    : 'hover:bg-slate-800'
                 }`}
+                style={{ 
+                  background: plan.popular ? '#ffffff' : buttonPrimaryBg, 
+                  color: plan.popular ? '#3b82f6' : buttonPrimaryText 
+                }}
               >
-                {plan.ctaText || 'Get Started'}
+                <span
+                  contentEditable={isEditing}
+                  suppressContentEditableWarning
+                  onBlur={(e) => {
+                    if (!isEditing || !onContentChange) return;
+                    const updated = content.plans.map((p) => p.id === plan.id ? { ...p, ctaText: e.currentTarget.textContent } : p);
+                    onContentChange('plans', updated);
+                  }}
+                >
+                  {plan.ctaText || 'Get Started'}
+                </span>
               </button>
             </div>
           ))}

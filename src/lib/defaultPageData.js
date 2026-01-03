@@ -9,9 +9,8 @@ export const createDefaultHeroSection = (variant = 'split') => ({
   locked: false,
   styles: {
     backgroundColor: '#0f172a',
-    backgroundGradient: variant === 'gradient' 
-      ? 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)' 
-      : 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
+    backgroundGradient: variant === 'gradient' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)' : null,
+    useGradient: variant === 'gradient',
     padding: variant === 'minimal' ? '60px 0' : '120px 0',
     minHeight: variant === 'minimal' ? '60vh' : '90vh',
   },
@@ -282,11 +281,12 @@ export const createDefaultNavbar = () => ({
     text: 'SiteBuilder',
   },
   links: [
-    { id: uuidv4(), label: 'Features', href: '#features' },
-    { id: uuidv4(), label: 'Services', href: '#services' },
-    { id: uuidv4(), label: 'Pricing', href: '#pricing' },
-    { id: uuidv4(), label: 'Contact', href: '#contact' },
-    { id: uuidv4(), label: 'Get Started', href: '#start', isButton: true },
+    { id: uuidv4(), label: 'Home', href: '/' },
+    { id: uuidv4(), label: 'Features', href: '/features' },
+    { id: uuidv4(), label: 'Services', href: '/services' },
+    { id: uuidv4(), label: 'Pricing', href: '/pricing' },
+    { id: uuidv4(), label: 'Contact', href: '/contact' },
+    { id: uuidv4(), label: 'Get Started', href: '/start', isButton: true },
   ],
   styles: {
     backgroundColor: 'transparent',
@@ -306,27 +306,27 @@ export const createDefaultFooter = () => ({
       id: uuidv4(),
       title: 'Product',
       links: [
-        { id: uuidv4(), label: 'Features', href: '#' },
-        { id: uuidv4(), label: 'Pricing', href: '#' },
-        { id: uuidv4(), label: 'Templates', href: '#' },
+        { id: uuidv4(), label: 'Features', href: '/features' },
+        { id: uuidv4(), label: 'Pricing', href: '/pricing' },
+        { id: uuidv4(), label: 'Templates', href: '/templates' },
       ],
     },
     {
       id: uuidv4(),
       title: 'Company',
       links: [
-        { id: uuidv4(), label: 'About', href: '#' },
-        { id: uuidv4(), label: 'Blog', href: '#' },
-        { id: uuidv4(), label: 'Careers', href: '#' },
+        { id: uuidv4(), label: 'About', href: '/about' },
+        { id: uuidv4(), label: 'Blog', href: '/blog' },
+        { id: uuidv4(), label: 'Careers', href: '/careers' },
       ],
     },
     {
       id: uuidv4(),
       title: 'Support',
       links: [
-        { id: uuidv4(), label: 'Help Center', href: '#' },
-        { id: uuidv4(), label: 'Contact', href: '#' },
-        { id: uuidv4(), label: 'Status', href: '#' },
+        { id: uuidv4(), label: 'Help Center', href: '/help' },
+        { id: uuidv4(), label: 'Contact', href: '/contact' },
+        { id: uuidv4(), label: 'Status', href: '/status' },
       ],
     },
   ],
@@ -343,7 +343,120 @@ export const createDefaultFooter = () => ({
   },
 });
 
-export const getDefaultPage = () => ({
+export const createFeaturesPage = () => ({
+  id: uuidv4(),
+  name: 'Features',
+  slug: '/features',
+  meta: {
+    title: 'Features - My Website',
+    description: 'Features page',
+  },
+  navbar: createDefaultNavbar(),
+  sections: [
+    createDefaultHeroSection('split'),
+    createDefaultFeaturesSection(),
+    createDefaultCTASection(),
+  ],
+  footer: createDefaultFooter(),
+  globalStyles: {
+    fontFamily: 'Inter, system-ui, sans-serif',
+    primaryColor: '#3b82f6',
+    secondaryColor: '#8b5cf6',
+    backgroundColor: '#ffffff',
+  },
+});
+
+export const createServicesPage = () => ({
+  id: uuidv4(),
+  name: 'Services',
+  slug: '/services',
+  navbar: createDefaultNavbar(),
+  sections: [createDefaultHeroSection('split'), createDefaultServicesSection(), createDefaultCTASection()],
+  footer: createDefaultFooter(),
+});
+
+export const createPricingPage = () => ({
+  id: uuidv4(),
+  name: 'Pricing',
+  slug: '/pricing',
+  navbar: createDefaultNavbar(),
+  sections: [createDefaultHeroSection('split'), createDefaultPricingSection(), createDefaultCTASection()],
+  footer: createDefaultFooter(),
+});
+
+export const createContactPage = () => ({
+  id: uuidv4(),
+  name: 'Contact',
+  slug: '/contact',
+  navbar: createDefaultNavbar(),
+  sections: [createDefaultHeroSection('split'), createDefaultContactSection(), createDefaultCTASection()],
+  footer: createDefaultFooter(),
+});
+
+export const createStartPage = () => ({
+  id: uuidv4(),
+  name: 'Get Started',
+  slug: '/start',
+  navbar: createDefaultNavbar(),
+  sections: [createDefaultHeroSection('split'), createDefaultCTASection()],
+  footer: createDefaultFooter(),
+});
+
+export const createTemplatesPage = () => ({
+  id: uuidv4(),
+  name: 'Templates',
+  slug: '/templates',
+  navbar: createDefaultNavbar(),
+  sections: [createDefaultHeroSection('split'), createDefaultGallerySection(), createDefaultCTASection()],
+  footer: createDefaultFooter(),
+});
+
+export const createAboutPage = () => ({
+  id: uuidv4(),
+  name: 'About',
+  slug: '/about',
+  navbar: createDefaultNavbar(),
+  sections: [createDefaultHeroSection('split'), createDefaultTeamSection(), createDefaultCTASection()],
+  footer: createDefaultFooter(),
+});
+
+export const createBlogPage = () => ({
+  id: uuidv4(),
+  name: 'Blog',
+  slug: '/blog',
+  navbar: createDefaultNavbar(),
+  sections: [createDefaultHeroSection('split')],
+  footer: createDefaultFooter(),
+});
+
+export const createCareersPage = () => ({
+  id: uuidv4(),
+  name: 'Careers',
+  slug: '/careers',
+  navbar: createDefaultNavbar(),
+  sections: [createDefaultHeroSection('split')],
+  footer: createDefaultFooter(),
+});
+
+export const createHelpPage = () => ({
+  id: uuidv4(),
+  name: 'Help',
+  slug: '/help',
+  navbar: createDefaultNavbar(),
+  sections: [createDefaultFAQSection(), createDefaultContactSection()],
+  footer: createDefaultFooter(),
+});
+
+export const createStatusPage = () => ({
+  id: uuidv4(),
+  name: 'Status',
+  slug: '/status',
+  navbar: createDefaultNavbar(),
+  sections: [createDefaultStatsSection()],
+  footer: createDefaultFooter(),
+});
+
+export const getDefaultPage = () => ({ 
   id: uuidv4(),
   name: 'Home',
   slug: '/',

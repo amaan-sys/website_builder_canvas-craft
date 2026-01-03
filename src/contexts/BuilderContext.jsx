@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { getDefaultPage } from '@/lib/defaultPageData';
+import { getDefaultPage, createFeaturesPage, createServicesPage, createPricingPage, createContactPage, createStartPage, createTemplatesPage, createAboutPage, createBlogPage, createCareersPage, createHelpPage, createStatusPage } from '@/lib/defaultPageData';
+
 
 
 
@@ -9,6 +10,7 @@ function builderReducer(state, action) {
   const saveToHistory = (newPage) => ({
     ...state,
     page: newPage,
+    pages: state.pages.map((p) => (p.id === newPage.id ? newPage : p)),
     history: [...state.history.slice(0, state.historyIndex + 1), newPage],
     historyIndex: state.historyIndex + 1,
   });
@@ -16,6 +18,17 @@ function builderReducer(state, action) {
   switch (action.type) {
     case 'SET_PAGE':
       return saveToHistory(action.payload);
+
+    case 'SET_ACTIVE_PAGE': {
+      const target = state.pages.find(p => p.id === action.payload);
+      if (!target) return state;
+      return {
+        ...state,
+        page: target,
+        history: [target],
+        historyIndex: 0,
+      };
+    }
 
     case 'SELECT_SECTION':
       return {
@@ -45,6 +58,13 @@ function builderReducer(state, action) {
           selectedComponentId: null,
         },
       };
+
+    case 'UPDATE_PAGE': {
+      const { slug, updates } = action.payload;
+      const newPages = state.pages.map((p) => (p.slug === slug ? { ...p, ...updates } : p));
+      const newPage = state.page.slug === slug ? { ...state.page, ...updates } : state.page;
+      return { ...state, pages: newPages, page: newPage };
+    }
 
     case 'SET_DRAGGING':
       return {
@@ -185,6 +205,26 @@ function builderReducer(state, action) {
       return saveToHistory({ ...state.page, sections: newSections });
     }
 
+    case 'UPDATE_NAV_LABEL': {
+      const { href, label } = action.payload;
+      const updateNavForPage = (p) => ({
+        ...p,
+        navbar: p.navbar
+          ? { ...p.navbar, links: p.navbar.links.map((l) => (l.href === href ? { ...l, label } : l)) }
+          : p.navbar,
+        footer: p.footer
+          ? { ...p.footer, columns: p.footer.columns.map((col) => ({
+              ...col,
+              links: col.links.map((l) => (l.href === href ? { ...l, label } : l)),
+            })) }
+          : p.footer,
+      });
+
+      const newPages = state.pages.map((p) => updateNavForPage(p));
+      const newPage = updateNavForPage(state.page);
+      return { ...state, pages: newPages, page: newPage };
+    }
+
     case 'UNDO':
       if (state.historyIndex <= 0) return state;
       return {
@@ -201,6 +241,18 @@ function builderReducer(state, action) {
         historyIndex: state.historyIndex + 1,
       };
 
+    case 'ADD_PAGE': {
+      const { page } = action.payload;
+      // avoid duplicate slugs
+      if (state.pages.some((p) => p.slug === page.slug)) {
+        return state;
+      }
+      return {
+        ...state,
+        pages: [...state.pages, page],
+      };
+    }
+
     default:
       return state;
   }
@@ -211,10 +263,28 @@ const BuilderContext = createContext(undefined);
 
 // Provider
 export function BuilderProvider({ children, initialPage }) {
-  const defaultPage = initialPage ?? getDefaultPage();
-  
+  const homePage = getDefaultPage();
+  const featuresPage = createFeaturesPage();
+  const servicesPage = createServicesPage();
+  const pricingPage = createPricingPage();
+  const contactPage = createContactPage();
+  const startPage = createStartPage();
+  const templatesPage = createTemplatesPage();
+  const aboutPage = createAboutPage();
+  const blogPage = createBlogPage();
+  const careersPage = createCareersPage();
+  const helpPage = createHelpPage();
+  const statusPage = createStatusPage();
+
+  const initial = initialPage ?? homePage;
+
+  const pagesList = initialPage
+    ? [initial, homePage, featuresPage, servicesPage, pricingPage, contactPage, startPage, templatesPage, aboutPage, blogPage, careersPage, helpPage, statusPage].filter((p, idx, arr) => arr.findIndex(x => x.slug === p.slug) === idx)
+    : [homePage, featuresPage, servicesPage, pricingPage, contactPage, startPage, templatesPage, aboutPage, blogPage, careersPage, helpPage, statusPage];
+
   const initialState = {
-    page: defaultPage,
+    page: initial,
+    pages: pagesList,
     editor: {
       selectedSectionId: null,
       selectedComponentId: null,
@@ -224,7 +294,7 @@ export function BuilderProvider({ children, initialPage }) {
       showGrid: false,
       previewMode: false,
     },
-    history: [defaultPage],
+    history: [initial],
     historyIndex: 0,
   };
 
@@ -291,6 +361,21 @@ export function BuilderProvider({ children, initialPage }) {
     dispatch({ type: 'UPDATE_FOOTER', payload: updates });
   }, []);
 
+  const setActivePage = useCallback((id) => {
+    dispatch({ type: 'SET_ACTIVE_PAGE', payload: id });
+  }, []);
+
+  const createPage = useCallback((page) => {
+    dispatch({ type: 'ADD_PAGE', payload: { page } });
+    dispatch({ type: 'SET_ACTIVE_PAGE', payload: page.id });
+  }, []);
+
+  const updatePageName = useCallback((slug, name) => {
+    dispatch({ type: 'UPDATE_PAGE', payload: { slug, updates: { name } } });
+    // Also update nav labels across all pages so the label is consistent everywhere
+    dispatch({ type: 'UPDATE_NAV_LABEL', payload: { href: slug, label: name } });
+  }, []);
+
   const setEditMode = useCallback((mode) => {
     dispatch({ type: 'SET_EDIT_MODE', payload: mode });
   }, []);
@@ -341,6 +426,10 @@ export function BuilderProvider({ children, initialPage }) {
     canRedo: state.historyIndex < state.history.length - 1,
     selectedSection,
     selectedComponent,
+    pages: state.pages,
+    setActivePage,
+    createPage,
+    updatePageName,
   };
 
   return <BuilderContext.Provider value={value}>{children}</BuilderContext.Provider>;

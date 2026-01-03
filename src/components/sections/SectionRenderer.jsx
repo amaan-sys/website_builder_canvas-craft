@@ -27,6 +27,9 @@ export function SectionRenderer({ section, isSelected, isEditing, onContentChang
     case 'team': return <TeamSection {...commonProps} />;
     case 'faq': return <FAQSection {...commonProps} />;
     case 'logocloud': return <LogoCloudSection {...commonProps} />;
-    default: return <div className={`p-20 text-center ${isSelected ? 'ring-2 ring-primary' : ''}`} style={{ background: section.styles.backgroundGradient || section.styles.backgroundColor || '#f8fafc', padding: section.styles.padding }}><p className="text-muted-foreground">Custom Section: {section.name}</p></div>;
+    default: {
+      const background = section.styles.useGradient ? (section.styles.backgroundGradient || section.styles.backgroundColor) : (section.styles.backgroundColor || '#f8fafc');
+      return <div className={`p-20 text-center ${isSelected ? 'ring-2 ring-primary' : ''}`} style={{ background, padding: section.styles.padding }}><p className="text-muted-foreground">Custom Section: {section.name}</p></div>;
+    }
   }
 }

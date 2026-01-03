@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 
 export function ServicesSection({ section, isSelected, isEditing, onContentChange }) {
-  const { content, styles } = section;
+  const { content, styles, variant = 'cards' } = section;
 
   const handleTextEdit = (field, e) => {
     if (onContentChange && isEditing) {
@@ -10,8 +10,10 @@ export function ServicesSection({ section, isSelected, isEditing, onContentChang
     }
   };
 
+  const background = styles.useGradient ? (styles.backgroundGradient || styles.backgroundColor) : (styles.backgroundColor || '#ffffff');
+
   const sectionStyle = {
-    background: styles.backgroundGradient || styles.backgroundColor,
+    background,
     padding: styles.padding,
   };
 
@@ -45,60 +47,74 @@ export function ServicesSection({ section, isSelected, isEditing, onContentChang
           </p>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {content.services?.map((service, index) => (
-            <div 
-              key={service.id}
-              className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:-translate-y-2"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              {/* Image */}
-              <div className="relative h-64 overflow-hidden">
-                <img 
-                  src={service.imageUrl}
-                  alt={service.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        {/* Services - variant rendering */}
+        {variant === 'list' ? (
+          <div className="space-y-4 max-w-3xl mx-auto">
+            {content.services?.map((service) => (
+              <div key={service.id} className="flex items-start gap-4">
+                <img src={service.imageUrl} alt={service.title} className="w-24 h-24 object-cover rounded-md" />
+                <div>
+                  <h3 contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => { if (!isEditing || !onContentChange) return; const updated = content.services.map((s) => s.id === service.id ? { ...s, title: e.currentTarget.textContent } : s); onContentChange('services', updated); }}>{service.title}</h3>
+                  <p contentEditable={isEditing} suppressContentEditableWarning onBlur={(e) => { if (!isEditing || !onContentChange) return; const updated = content.services.map((s) => s.id === service.id ? { ...s, description: e.currentTarget.textContent } : s); onContentChange('services', updated); }} className="text-sm text-muted-foreground">{service.description}</p>
+                </div>
               </div>
-
-              {/* Content Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <h3 
-                  className="text-2xl font-bold mb-2"
-                  contentEditable={isEditing}
-                  suppressContentEditableWarning
-                >
-                  {service.title}
-                </h3>
-                <p 
-                  className="opacity-80 mb-4 line-clamp-2"
-                  contentEditable={isEditing}
-                  suppressContentEditableWarning
-                >
-                  {service.description}
-                </p>
-                
-                <a 
-                  href={service.link}
-                  className="inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:text-primary"
-                >
-                  Learn More 
-                  <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-                </a>
-              </div>
-
-              {/* Corner Accent */}
+            ))}
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {content.services?.map((service, index) => (
               <div 
-                className="absolute top-4 right-4 w-12 h-12 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)' }}
+                key={service.id}
+                className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:-translate-y-2"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <ArrowUpRight className="w-5 h-5 text-white" />
+                {/* Image */}
+                <div className="relative h-64 overflow-hidden">
+                  <img 
+                    src={service.imageUrl}
+                    alt={service.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                </div>
+
+                {/* Content Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <h3 
+                    className="text-2xl font-bold mb-2"
+                    contentEditable={isEditing}
+                    suppressContentEditableWarning
+                  >
+                    {service.title}
+                  </h3>
+                  <p 
+                    className="opacity-80 mb-4 line-clamp-2"
+                    contentEditable={isEditing}
+                    suppressContentEditableWarning
+                  >
+                    {service.description}
+                  </p>
+                  
+                  <a 
+                    href={service.link}
+                    className="inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:text-primary"
+                  >
+                    Learn More 
+                    <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  </a>
+                </div>
+
+                {/* Corner Accent */}
+                <div 
+                  className="absolute top-4 right-4 w-12 h-12 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)' }}
+                >
+                  <ArrowUpRight className="w-5 h-5 text-white" />
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

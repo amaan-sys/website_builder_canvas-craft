@@ -72,11 +72,49 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
       return;
     }
 
-    // Preview mode: navigate as SPA when link is an internal route
+    // Preview mode: switch the builder's active page so preview stays active
     if (link.href && link.href.startsWith('/')) {
       e.preventDefault();
-      navigate(link.href);
-      setMobileMenuOpen(false);
+      const targetPage = pages.find((p) => p.slug === link.href);
+      if (targetPage) {
+        setActivePage(targetPage.id);
+        setMobileMenuOpen(false);
+        return;
+      }
+
+      // If no page exists for this href, create a new page on-the-fly in preview
+      const slug = link.href;
+      let newPage = null;
+      switch (slug) {
+        case '/features': newPage = createFeaturesPage(); break;
+        case '/services': newPage = createServicesPage(); break;
+        case '/pricing': newPage = createPricingPage(); break;
+        case '/contact': newPage = createContactPage(); break;
+        case '/start': newPage = createStartPage(); break;
+        case '/templates': newPage = createTemplatesPage(); break;
+        case '/about': newPage = createAboutPage(); break;
+        case '/blog': newPage = createBlogPage(); break;
+        case '/careers': newPage = createCareersPage(); break;
+        case '/help': newPage = createHelpPage(); break;
+        case '/status': newPage = createStatusPage(); break;
+        case '/privacy': newPage = createPrivacyPolicyPage(); break;
+        case '/terms': newPage = createTermsOfServicePage(); break;
+        default:
+          newPage = {
+            id: uuidv4(),
+            name: link.label || slug.replace('/', '') || 'New Page',
+            slug: slug,
+            navbar: createDefaultNavbar(),
+            sections: [createDefaultHeroSection(), createDefaultCTASection()],
+            footer: createDefaultFooter(),
+          };
+      }
+
+      if (newPage) {
+        createPage(newPage);
+        setMobileMenuOpen(false);
+        return;
+      }
     }
   };
 
@@ -89,9 +127,8 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
 
   return (
     <nav
-      className={`${
-        config.styles.sticky ? 'sticky top-0' : 'relative'
-      } z-50 backdrop-blur-md ${isEditing ? 'cursor-pointer' : ''}`}
+      className={`${config.styles.sticky ? 'sticky top-0' : 'relative'
+        } z-50 backdrop-blur-md ${isEditing ? 'cursor-pointer' : ''}`}
       style={navStyle}
       onClick={handleNavbarClick}
     >
@@ -198,9 +235,8 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
           MOBILE MENU
       ===================================================== */}
       <div
-        className={`md:hidden absolute top-full left-0 w-full overflow-hidden transition-all duration-300 ${
-          mobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-        }`}
+        className={`md:hidden absolute top-full left-0 w-full overflow-hidden transition-all duration-300 ${mobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+          }`}
         style={navStyle}
       >
         <div className="px-6 py-6 border-t border-white/10 flex flex-col gap-4">
@@ -209,18 +245,17 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
               key={link.id}
               href={link.href}
               onClick={(e) => handleNavClick(e, link)}
-              className={`font-medium py-3 ${
-                link.isButton
-                  ? 'rounded-lg text-center'
-                  : 'border-b border-white/10'
-              }`}
+              className={`font-medium py-3 ${link.isButton
+                ? 'rounded-lg text-center'
+                : 'border-b border-white/10'
+                }`}
               style={
                 link.isButton
                   ? {
-                      background:
-                        'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
-                      color: '#ffffff',
-                    }
+                    background:
+                      'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+                    color: '#ffffff',
+                  }
                   : { color: config.styles.textColor }
               }
               contentEditable={isEditing}

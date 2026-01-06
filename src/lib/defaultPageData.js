@@ -164,6 +164,50 @@ export const createDefaultGallerySection = () => ({
   components: [],
 });
 
+// Image section removed — it was deprecated and removed from templates. Existing image sections will still render via a fallback in the renderer.
+
+export const createDefaultBlogListSection = () => ({
+  id: uuidv4(),
+  type: 'blog',
+  name: 'Blog List',
+  visible: true,
+  locked: false,
+  styles: {
+    backgroundColor: '#f8fafc',
+    padding: '100px 0',
+  },
+  content: {
+    headline: 'Latest Posts',
+    subheadline: 'Read our latest insights',
+    posts: [
+      { id: uuidv4(), imageUrl: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80', title: 'How we built our product', excerpt: 'An inside look at our design decisions and architecture.', author: 'Team', date: 'Jan 1, 2024' },
+      { id: uuidv4(), imageUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80', title: 'Design trends 2024', excerpt: 'What’s shaping design this year and beyond.', author: 'Design', date: 'Feb 15, 2024' },
+    ],
+  },
+  components: [],
+});
+
+export const createDefaultMasonryGallerySection = () => ({
+  id: uuidv4(),
+  type: 'gallery-masonry',
+  name: 'Gallery Masonry',
+  visible: true,
+  locked: false,
+  styles: {
+    backgroundColor: '#ffffff',
+    padding: '80px 0',
+  },
+  content: {
+    images: [
+      { id: uuidv4(), url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80', title: 'Dashboard' },
+      { id: uuidv4(), url: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&q=80', title: 'Collaboration' },
+      { id: uuidv4(), url: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&q=80', title: 'E-commerce' },
+    ],
+  },
+  components: [],
+});
+
+
 export const createDefaultContactSection = () => ({
   id: uuidv4(),
   type: 'contact',

@@ -59,6 +59,24 @@ function builderReducer(state, action) {
         },
       };
 
+    case 'SET_LEFT_PANEL':
+      return {
+        ...state,
+        editor: {
+          ...state.editor,
+          showLeftPanel: action.payload,
+        },
+      };
+
+    case 'SET_RIGHT_PANEL':
+      return {
+        ...state,
+        editor: {
+          ...state.editor,
+          showRightPanel: action.payload,
+        },
+      }; 
+
     case 'UPDATE_PAGE': {
       const { slug, updates } = action.payload;
       const newPages = state.pages.map((p) => (p.slug === slug ? { ...p, ...updates } : p));
@@ -293,6 +311,8 @@ export function BuilderProvider({ children, initialPage }) {
       zoom: 100,
       showGrid: false,
       previewMode: false,
+      showLeftPanel: true,
+      showRightPanel: true,
     },
     history: [initial],
     historyIndex: 0,
@@ -384,6 +404,14 @@ export function BuilderProvider({ children, initialPage }) {
     dispatch({ type: 'SET_PREVIEW_MODE', payload: enabled });
   }, []);
 
+  const setLeftPanelVisible = useCallback((visible) => {
+    dispatch({ type: 'SET_LEFT_PANEL', payload: visible });
+  }, []);
+
+  const setRightPanelVisible = useCallback((visible) => {
+    dispatch({ type: 'SET_RIGHT_PANEL', payload: visible });
+  }, []);
+
   const undo = useCallback(() => {
     dispatch({ type: 'UNDO' });
   }, []);
@@ -420,6 +448,8 @@ export function BuilderProvider({ children, initialPage }) {
     updateFooter,
     setEditMode,
     setPreviewMode,
+    setLeftPanelVisible,
+    setRightPanelVisible,
     undo,
     redo,
     canUndo: state.historyIndex > 0,

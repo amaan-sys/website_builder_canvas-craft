@@ -16,9 +16,9 @@ function EditorContent() {
       <EditorToolbar viewport={viewport} onViewportChange={setViewport} />
       <div className="flex-1 min-h-0">
         <ResizablePanelGroup direction="horizontal" className="h-full">
-          {!editor.previewMode && (<><ResizablePanel defaultSize={20} minSize={15} maxSize={30} className="bg-sidebar border-r border-sidebar-border"><SectionsList /></ResizablePanel><ResizableHandle className="w-1 bg-border hover:bg-primary/50 transition-colors" /></>)}
+          {!editor.previewMode && editor.showLeftPanel && (<><ResizablePanel defaultSize={20} minSize={15} maxSize={30} className="bg-sidebar border-r border-sidebar-border"><SectionsList /></ResizablePanel><ResizableHandle className="w-1 bg-border hover:bg-primary/50 transition-colors" /></>)}
           <ResizablePanel defaultSize={editor.previewMode ? 100 : 55}><CanvasPreview viewport={viewport} /></ResizablePanel>
-          {!editor.previewMode && (<><ResizableHandle className="w-1 bg-border hover:bg-primary/50 transition-colors" /><ResizablePanel defaultSize={25} minSize={20} maxSize={35} className="bg-sidebar border-l border-sidebar-border"><PropertiesPanel /></ResizablePanel></>)}
+          {!editor.previewMode && editor.showRightPanel && (<><ResizableHandle className="w-1 bg-border hover:bg-primary/50 transition-colors" /><ResizablePanel defaultSize={25} minSize={20} maxSize={35} className="bg-sidebar border-l border-sidebar-border"><PropertiesPanel /></ResizablePanel></>)}
         </ResizablePanelGroup>
       </div>
     </div>

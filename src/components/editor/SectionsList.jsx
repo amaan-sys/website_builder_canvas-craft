@@ -142,6 +142,7 @@ export function SectionsList() {
   const { state, selectSection, reorderSections, addSection } = useBuilder();
   const { page, editor } = state;
   const [templatesOpen, setTemplatesOpen] = React.useState(true);
+  const [query, setQuery] = React.useState('');
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -165,73 +166,74 @@ export function SectionsList() {
     selectSection(newSection.id);
   };
 
+  const filtered = page.sections.filter((s) => {
+    const q = (typeof query === 'string' ? query : '').trim().toLowerCase();
+    if (!q) return true;
+    return s.name.toLowerCase().includes(q) || s.type.toLowerCase().includes(q);
+  });
+
   return (
     <div className="h-full flex flex-col">
       <div className="p-4 border-b border-border flex-shrink-0">
-        <div className="flex items-center gap-2">
-          <Layers className="w-5 h-5 text-primary" />
-          <h2 className="font-semibold">Sections</h2>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <Layers className="w-6 h-6 text-primary" />
+            <div className="min-w-0">
+              <h2 className="font-semibold text-sm truncate">Sections</h2>
+              <p className="text-xs text-muted-foreground mt-0.5 truncate">Drag to reorder • Click to edit</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="text-xs text-muted-foreground mr-2 hidden sm:inline">{page.sections.length} sections</div>
+            <button onClick={() => setTemplatesOpen((v) => !v)} className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-primary/10 text-primary text-sm hover:bg-primary/20 transition-colors"><Plus className="w-4 h-4" /> Add</button>
+          </div>
         </div>
-        <p className="text-xs text-muted-foreground mt-1">
-          Drag to reorder • Click to edit
-        </p>
+
+        <div className="mt-3 min-w-0">
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search sections" className="w-full text-sm px-3 py-2 rounded-md border border-border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary/40 truncate" />
+        </div>
       </div>
-      <div className="flex-1 overflow-y-auto p-4 space-y-2 scrollbar-thin">
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={page.sections.map((s) => s.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            {page.sections.map((section) => (
-              <SectionItem
-                key={section.id}
-                id={section.id}
-                name={section.name}
-                type={section.type}
-                visible={section.visible}
-                isSelected={editor.selectedSectionId === section.id}
-                onClick={() => selectSection(section.id)}
-              />
-            ))}
+
+      <div className="flex-1 overflow-y-auto p-3 space-y-2 scrollbar-thin">
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={filtered.map((s) => s.id)} strategy={verticalListSortingStrategy}>
+            {filtered.length > 0 ? filtered.map((section) => (
+              <SectionItem key={section.id} id={section.id} name={section.name} type={section.type} visible={section.visible} isSelected={editor.selectedSectionId === section.id} onClick={() => selectSection(section.id)} />
+            )) : (
+              <div className="text-center py-8 text-muted-foreground">
+                <Layers className="w-10 h-10 mx-auto mb-3 opacity-40" />
+                <p className="text-sm">No matching sections</p>
+              </div>
+            )}
           </SortableContext>
         </DndContext>
+
         {page.sections.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground">
-            <Layers className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p className="text-sm">No sections yet</p>
-          </div>
+          <div className="text-center py-12 text-muted-foreground"><Layers className="w-12 h-12 mx-auto mb-4 opacity-50" /><p className="text-sm">No sections yet</p></div>
         )}
       </div>
+
       <div className="border-t border-border flex-shrink-0">
         <Collapsible open={templatesOpen} onOpenChange={setTemplatesOpen}>
-          <CollapsibleTrigger className="w-full p-4 flex items-center justify-between hover:bg-secondary/50 transition-colors">
+          <CollapsibleTrigger className="w-full p-3 flex items-center justify-between hover:bg-secondary/50 transition-colors">
             <div className="flex items-center gap-2">
               <Plus className="w-4 h-4 text-primary" />
               <span className="text-sm font-medium">Add Section</span>
             </div>
-            <ChevronDown
-              className={`w-4 h-4 transition-transform ${
-                templatesOpen ? "rotate-180" : ""
-              }`}
-            />
+            <ChevronDown className={`w-4 h-4 transition-transform ${templatesOpen ? 'rotate-180' : ''}`} />
           </CollapsibleTrigger>
+
           <CollapsibleContent>
-            <ScrollArea className="h-[280px]">
-              <div className="grid grid-cols-2 gap-2 p-4 pt-0">
+            <ScrollArea className="h-[320px]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-3 pt-0">
                 {sectionTemplates.map((template) => (
-                  <button
-                    key={template.type}
-                    onClick={() => handleAddSection(template.create)}
-                    className="flex flex-col items-center gap-2 p-3 rounded-xl border border-border hover:border-primary/50 hover:bg-secondary/50 transition-all duration-200 group"
-                  >
-                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <template.icon className="w-4 h-4 text-white" />
+                  <button key={template.type} onClick={() => handleAddSection(template.create)} className="flex items-center gap-3 p-2 rounded-md border border-border hover:border-primary/50 hover:bg-secondary/50 transition-all duration-150 group text-left">
+                    <div className="w-8 h-8 rounded-md bg-gradient-to-br from-primary to-accent flex items-center justify-center shrink-0"><template.icon className="w-5 h-5 text-white" /></div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-medium truncate">{template.name}</div>
+                      <div className="text-xs text-muted-foreground truncate">{template.type}</div>
                     </div>
-                    <span className="text-xs font-medium">{template.name}</span>
                   </button>
                 ))}
               </div>

@@ -13,11 +13,32 @@ export function SectionItem({ id, name, type, visible, isSelected, onClick }) {
   const style = { transform: CSS.Transform.toString(transform), transition };
   const Icon = sectionIcons[type] || Layout;
   return (
-    <div ref={setNodeRef} style={style} className={`group relative flex items-center gap-3 p-3 rounded-xl transition-all duration-200 cursor-pointer ${isSelected ? 'bg-primary/20 border border-primary/50' : 'bg-secondary/50 border border-transparent hover:bg-secondary hover:border-border'} ${isDragging ? 'opacity-50 scale-105 shadow-lg' : ''} ${!visible ? 'opacity-50' : ''}`} onClick={onClick}>
-      <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-1 rounded hover:bg-muted/50"><GripVertical className="w-4 h-4 text-muted-foreground" /></div>
-      <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${sectionColors[type]} flex items-center justify-center`}><Icon className="w-4 h-4 text-white" /></div>
-      <div className="flex-1 min-w-0"><p className="text-sm font-medium truncate">{name}</p><p className="text-xs text-muted-foreground capitalize">{type}</p></div>
-      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`group relative flex items-center gap-3 p-3 rounded-lg transition-all duration-200 cursor-pointer ${isSelected ? 'bg-primary/10 border border-primary/50 shadow-sm' : 'bg-secondary/50 border border-transparent hover:bg-white/2 hover:shadow-sm'} ${isDragging ? 'opacity-60 scale-102 shadow-lg' : ''} ${!visible ? 'opacity-50' : ''}`}
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+    >
+      <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-1 rounded hover:bg-muted/50">
+        <GripVertical className="w-4 h-4 text-muted-foreground" />
+      </div>
+
+      <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${sectionColors[type]} flex items-center justify-center flex-shrink-0`}>
+        <Icon className="w-4 h-4 text-white" />
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium truncate">{name}</p>
+        <div className="flex items-center gap-2 mt-0.5">
+          <span className="text-xs text-muted-foreground capitalize truncate">{type}</span>
+          <span className="ml-1 text-xs text-muted-foreground">•</span>
+          <span className="text-xs text-muted-foreground">{visible ? 'visible' : 'hidden'}</span>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
         <button onClick={(e) => { e.stopPropagation(); toggleSectionVisibility(id); }} className="p-1.5 rounded-md hover:bg-muted/50 transition-colors" title={visible ? 'Hide section' : 'Show section'}>{visible ? <Eye className="w-4 h-4 text-muted-foreground" /> : <EyeOff className="w-4 h-4 text-muted-foreground" />}</button>
         <button onClick={(e) => { e.stopPropagation(); duplicateSection(id); }} className="p-1.5 rounded-md hover:bg-muted/50 transition-colors" title="Duplicate section"><Copy className="w-4 h-4 text-muted-foreground" /></button>
         <button onClick={(e) => { e.stopPropagation(); deleteSection(id); }} className="p-1.5 rounded-md hover:bg-destructive/20 transition-colors" title="Delete section"><Trash2 className="w-4 h-4 text-destructive" /></button>

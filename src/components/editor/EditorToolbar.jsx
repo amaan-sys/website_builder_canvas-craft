@@ -1,12 +1,12 @@
 import React from 'react';
 import { useBuilder } from '@/contexts/BuilderContext';
-import { Undo2, Redo2, Eye, Download, Play } from 'lucide-react';
+import { Undo2, Redo2, Eye, Download, Play, Layout, Sidebar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function EditorToolbar() {
-  const { state, undo, redo, canUndo, canRedo, setPreviewMode } = useBuilder();
+  const { state, undo, redo, canUndo, canRedo, setPreviewMode, setLeftPanelVisible, setRightPanelVisible } = useBuilder();
   const { editor, page } = state;
 
   const handleExport = () => {
@@ -79,6 +79,36 @@ export function EditorToolbar() {
         </div>
 
         <Separator orientation="vertical" className="h-6" />
+
+        {/* TOGGLE LEFT PANEL */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setLeftPanelVisible(!editor.showLeftPanel)}
+              className={!editor.showLeftPanel ? 'bg-primary/20 text-primary' : ''}
+            >
+              <Layout className="w-4 h-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Toggle Sections Panel</TooltipContent>
+        </Tooltip>
+
+        {/* TOGGLE RIGHT PANEL */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setRightPanelVisible(!editor.showRightPanel)}
+              className={!editor.showRightPanel ? 'bg-primary/20 text-primary' : ''}
+            >
+              <Sidebar className="w-4 h-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Toggle Properties Panel</TooltipContent>
+        </Tooltip>
 
         {/* PREVIEW */}
         <Tooltip>

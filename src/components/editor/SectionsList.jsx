@@ -32,6 +32,7 @@ import {
   HelpCircle,
   Building2,
   FileText,
+  Info,
 } from "lucide-react";
 import {
   Collapsible,
@@ -54,6 +55,7 @@ import {
   createDefaultLogoCloudSection,
   createDefaultBlogListSection,
   createDefaultMasonryGallerySection,
+  createDefaultAboutSection,
 } from "@/lib/defaultPageData";
 
 const sectionTemplates = [
@@ -135,6 +137,12 @@ const sectionTemplates = [
     name: "Logo Cloud",
     icon: Building2,
     create: createDefaultLogoCloudSection,
+  },
+  {
+    type: "about",
+    name: "About Us",
+    icon: Info,
+    create: createDefaultAboutSection,
   },
 ];
 

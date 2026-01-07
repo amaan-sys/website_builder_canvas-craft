@@ -14,6 +14,7 @@ import { TeamSection } from './TeamSection';
 import { FAQSection } from './FAQSection';
 import { LogoCloudSection } from './LogoCloudSection';
 import { ContentSection } from './ContentSection';
+import { AboutSection } from './AboutSection';
 
 export function SectionRenderer({ section, isSelected, isEditing, onContentChange }) {
   const commonProps = { section, isSelected, isEditing, onContentChange };
@@ -33,6 +34,7 @@ export function SectionRenderer({ section, isSelected, isEditing, onContentChang
     case 'faq': return <FAQSection {...commonProps} />;
     case 'logocloud': return <LogoCloudSection {...commonProps} />;
     case 'content': return <ContentSection {...commonProps} />;
+    case 'about': return <AboutSection {...commonProps} />;
     default: {
       // Legacy support: render 'image' sections inline so existing pages keep showing images
       if (section.type === 'image') {

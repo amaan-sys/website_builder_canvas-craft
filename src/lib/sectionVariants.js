@@ -66,6 +66,11 @@ export const sectionVariants = {
     { id: 'scroll', name: 'Scrolling', description: 'Infinite scrolling logos' },
     { id: 'grid', name: 'Logo Grid', description: 'Logos in a grid' },
   ],
+  about: [
+    { id: 'split', name: 'Split Layout', description: 'Content on one side, image on the other' },
+    { id: 'centered', name: 'Centered', description: 'Centered content with featured image' },
+    { id: 'cards', name: 'Story + Values Cards', description: 'Story with values in cards' },
+  ],
 };
 
 export function getVariantsForSection(sectionType) {

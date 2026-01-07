@@ -138,6 +138,65 @@ export function PropertiesPanel() {
         <div className="space-y-2"><Label className="text-xs text-muted-foreground">Video URL (YouTube embed link)</Label><Input value={content.videoUrl || ''} onChange={(e) => handleContentChange('videoUrl', e.target.value)} className="bg-secondary border-border" placeholder="https://www.youtube.com/embed/..." /></div>
       </>);
 
+      case 'about': return (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-3">
+            <div className="space-y-2"><Label className="text-xs text-muted-foreground">Badge</Label><Input value={content.badge || ''} onChange={(e) => handleContentChange('badge', e.target.value)} className="bg-secondary border-border" placeholder="About Us" /></div>
+            <div className="space-y-2"><Label className="text-xs text-muted-foreground">Headline</Label><Input value={content.headline || ''} onChange={(e) => handleContentChange('headline', e.target.value)} className="bg-secondary border-border" /></div>
+            <div className="space-y-2"><Label className="text-xs text-muted-foreground">Description</Label><Textarea value={content.description || ''} onChange={(e) => handleContentChange('description', e.target.value)} className="bg-secondary border-border resize-none" rows={3} /></div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3">
+            <div className="space-y-2"><Label className="text-xs text-muted-foreground">Image URL</Label><Input value={content.imageUrl || ''} onChange={(e) => handleContentChange('imageUrl', e.target.value)} className="bg-secondary border-border" placeholder="https://..." /></div>
+            <div className="space-y-2"><Label className="text-xs text-muted-foreground">Image Alt</Label><Input value={content.imageAlt || ''} onChange={(e) => handleContentChange('imageAlt', e.target.value)} className="bg-secondary border-border" placeholder="About us image" /></div>
+            <div className="space-y-2">
+              <Label className="text-xs text-muted-foreground">Image Position</Label>
+              <Select value={content.imagePosition || 'right'} onValueChange={(value) => handleContentChange('imagePosition', value)}>
+                <SelectTrigger className="bg-secondary border-border"><SelectValue placeholder="Select position" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Left</SelectItem>
+                  <SelectItem value="right">Right</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div>
+            <Label className="text-xs text-muted-foreground">Values</Label>
+            <div className="space-y-2 mt-2">
+              {(content.values || []).map((v) => (
+                <div key={v.id} className="p-3 bg-secondary rounded-md border border-border">
+                  <div className="flex gap-2 items-center">
+                    <Input value={v.icon || ''} onChange={(e) => {
+                      const updated = (content.values || []).map((x) => x.id === v.id ? { ...x, icon: e.target.value } : x);
+                      handleContentChange('values', updated);
+                    }} className="w-36" placeholder="Icon (Target, Eye, Heart...)" />
+                    <Input value={v.title || ''} onChange={(e) => {
+                      const updated = (content.values || []).map((x) => x.id === v.id ? { ...x, title: e.target.value } : x);
+                      handleContentChange('values', updated);
+                    }} className="flex-1" placeholder="Title" />
+                    <button className="ml-2 text-red-500" onClick={() => {
+                      const updated = (content.values || []).filter(x => x.id !== v.id);
+                      handleContentChange('values', updated);
+                    }}>Remove</button>
+                  </div>
+                  <Textarea value={v.description || ''} onChange={(e) => {
+                    const updated = (content.values || []).map((x) => x.id === v.id ? { ...x, description: e.target.value } : x);
+                    handleContentChange('values', updated);
+                  }} rows={2} className="mt-2" />
+                </div>
+              ))}
+
+              <button className="mt-2 px-3 py-2 rounded bg-primary text-white" onClick={() => {
+                const newValue = { id: (Math.random()+1).toString(36).substring(7), icon: 'Target', title: 'New Value', description: 'Describe this value.' };
+                const updated = [...(content.values || []), newValue];
+                handleContentChange('values', updated);
+              }}>Add Value</button>
+            </div>
+          </div>
+        </div>
+      );
+
       case 'features': return (
         <div className="space-y-4">
           <div className="space-y-2"><Label className="text-xs text-muted-foreground">Headline</Label><Input value={content.headline || ''} onChange={(e) => handleContentChange('headline', e.target.value)} className="bg-secondary border-border" /></div>

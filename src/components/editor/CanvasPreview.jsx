@@ -31,16 +31,14 @@ export function CanvasPreview() {
 
   return (
     <div
-      className="h-full overflow-y-auto  scrollbar-thin"
-      style={{ backgroundColor: 'hsl(var(--builder-panel))' }}
+      className="h-full overflow-y-auto scrollbar-thin bg-[hsl(var(--builder-panel))]"
       onClick={handleCanvasClick}
     >
       {/* FIXED FULL-WIDTH CANVAS */}
       <div
-        className="mx-auto shadow-elevated rounded-xl overflow-hidden"
+        className="mx-auto shadow-elevated rounded-xl overflow-hidden bg-[hsl(var(--canvas))] transition-colors duration-200"
         style={{
-          maxWidth: '100%',
-          backgroundColor: '#ffffff'
+          maxWidth: '100%'
         }}
       >
         <div className="light-canvas">

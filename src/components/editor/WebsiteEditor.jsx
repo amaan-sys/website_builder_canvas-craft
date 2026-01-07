@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BuilderProvider, useBuilder } from '@/contexts/BuilderContext';
 import { EditorToolbar } from './EditorToolbar';
 import { SectionsList } from './SectionsList';
@@ -8,12 +8,24 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/componen
 
 function EditorContent() {
   const [viewport, setViewport] = useState('desktop');
+  const [theme, setTheme] = useState('light');
   const { state } = useBuilder();
   const { editor } = state;
 
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'));
+
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
-      <EditorToolbar viewport={viewport} onViewportChange={setViewport} />
+      <EditorToolbar viewport={viewport} onViewportChange={setViewport} theme={theme} onToggleTheme={toggleTheme} />
       <div className="flex-1 min-h-0">
         <ResizablePanelGroup direction="horizontal" className="h-full">
           {!editor.previewMode && editor.showLeftPanel && (<><ResizablePanel defaultSize={20} minSize={15} maxSize={30} className="bg-sidebar border-r border-sidebar-border"><SectionsList /></ResizablePanel><ResizableHandle className="w-1 bg-border hover:bg-primary/50 transition-colors" /></>)}

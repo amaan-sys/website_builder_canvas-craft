@@ -318,6 +318,38 @@ export const createDefaultLogoCloudSection = () => ({
   components: [],
 });
 
+export const createDefaultAboutSection = (variant = 'split') => ({
+  id: uuidv4(),
+  type: 'about',
+  variant,
+  name: 'About Us',
+  visible: true,
+  locked: false,
+  styles: {
+    backgroundColor: '#ffffff',
+    padding: '100px 0',
+    headingColor: '#0f172a',
+    paragraphColor: '#475569',
+  },
+  content: {
+    badge: 'About Us',
+    headline: 'We Build Digital Experiences That Matter',
+    description: 'Founded with a vision to revolutionize how people create and manage their digital presence, we have grown from a small startup to a trusted platform serving thousands of creators worldwide. Our mission is to make professional website creation accessible to everyone.',
+    imageUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80',
+    imageAlt: 'Our team working together',
+    imagePosition: 'right',
+    storyTitle: 'Our Story',
+    storyContent: 'We started with a simple idea: everyone deserves the tools to build their digital presence. Today, we help thousands of businesses and individuals create stunning websites without writing a single line of code.',
+    values: [
+      { id: uuidv4(), icon: 'Target', title: 'Our Mission', description: 'Empowering everyone to build beautiful websites without technical barriers.' },
+      { id: uuidv4(), icon: 'Eye', title: 'Our Vision', description: 'A world where anyone can bring their digital ideas to life effortlessly.' },
+      { id: uuidv4(), icon: 'Heart', title: 'Our Values', description: 'Innovation, accessibility, quality, and putting our users first in everything we do.' },
+      { id: uuidv4(), icon: 'Award', title: 'Our Promise', description: 'Reliable, secure, and continuously improving tools for your success.' },
+    ],
+  },
+  components: [],
+});
+
 export const createDefaultNavbar = () => ({
   id: uuidv4(),
   style: 'minimal',
@@ -326,7 +358,7 @@ export const createDefaultNavbar = () => ({
   },
   links: [
     { id: uuidv4(), label: 'Home', href: '/' },
-    { id: uuidv4(), label: 'Features', href: '/features' },
+    { id: uuidv4(), label: 'About', href: '/about' },
     { id: uuidv4(), label: 'Services', href: '/services' },
     { id: uuidv4(), label: 'Pricing', href: '/pricing' },
     { id: uuidv4(), label: 'Contact', href: '/contact' },
@@ -350,7 +382,7 @@ export const createDefaultFooter = () => ({
       id: uuidv4(),
       title: 'Product',
       links: [
-        { id: uuidv4(), label: 'Features', href: '/features' },
+        { id: uuidv4(), label: 'About', href: '/about' },
         { id: uuidv4(), label: 'Pricing', href: '/pricing' },
         { id: uuidv4(), label: 'Templates', href: '/templates' },
       ],
@@ -397,7 +429,6 @@ export const createFeaturesPage = () => ({
   },
   navbar: createDefaultNavbar(),
   sections: [
-    createDefaultHeroSection('split'),
     createDefaultFeaturesSection(),
     createDefaultCTASection(),
   ],
@@ -415,7 +446,7 @@ export const createServicesPage = () => ({
   name: 'Services',
   slug: '/services',
   navbar: createDefaultNavbar(),
-  sections: [createDefaultHeroSection('split'), createDefaultServicesSection(), createDefaultCTASection()],
+  sections: [createDefaultServicesSection(), createDefaultCTASection()],
   footer: createDefaultFooter(),
 });
 
@@ -424,7 +455,7 @@ export const createPricingPage = () => ({
   name: 'Pricing',
   slug: '/pricing',
   navbar: createDefaultNavbar(),
-  sections: [createDefaultHeroSection('split'), createDefaultPricingSection(), createDefaultCTASection()],
+  sections: [createDefaultPricingSection(), createDefaultCTASection()],
   footer: createDefaultFooter(),
 });
 
@@ -433,7 +464,7 @@ export const createContactPage = () => ({
   name: 'Contact',
   slug: '/contact',
   navbar: createDefaultNavbar(),
-  sections: [createDefaultHeroSection('split'), createDefaultContactSection(), createDefaultCTASection()],
+  sections: [createDefaultContactSection(), createDefaultCTASection()],
   footer: createDefaultFooter(),
 });
 
@@ -442,7 +473,7 @@ export const createStartPage = () => ({
   name: 'Get Started',
   slug: '/start',
   navbar: createDefaultNavbar(),
-  sections: [createDefaultHeroSection('split'), createDefaultCTASection()],
+  sections: [createDefaultCTASection()],
   footer: createDefaultFooter(),
 });
 
@@ -451,7 +482,7 @@ export const createTemplatesPage = () => ({
   name: 'Templates',
   slug: '/templates',
   navbar: createDefaultNavbar(),
-  sections: [createDefaultHeroSection('split'), createDefaultGallerySection(), createDefaultCTASection()],
+  sections: [createDefaultGallerySection(), createDefaultCTASection()],
   footer: createDefaultFooter(),
 });
 
@@ -459,9 +490,23 @@ export const createAboutPage = () => ({
   id: uuidv4(),
   name: 'About',
   slug: '/about',
+  meta: {
+    title: 'About Us - My Website',
+    description: 'Learn more about our company, mission, and values',
+  },
   navbar: createDefaultNavbar(),
-  sections: [createDefaultHeroSection('split'), createDefaultTeamSection(), createDefaultCTASection()],
+  sections: [
+    createDefaultAboutSection('split'),
+    createDefaultTeamSection(),
+    createDefaultCTASection(),
+  ],
   footer: createDefaultFooter(),
+  globalStyles: {
+    fontFamily: 'Inter, system-ui, sans-serif',
+    primaryColor: '#3b82f6',
+    secondaryColor: '#8b5cf6',
+    backgroundColor: '#ffffff',
+  },
 });
 
 export const createBlogPage = () => ({
@@ -469,7 +514,7 @@ export const createBlogPage = () => ({
   name: 'Blog',
   slug: '/blog',
   navbar: createDefaultNavbar(),
-  sections: [createDefaultHeroSection('split')],
+  sections: [],
   footer: createDefaultFooter(),
 });
 
@@ -478,7 +523,7 @@ export const createCareersPage = () => ({
   name: 'Careers',
   slug: '/careers',
   navbar: createDefaultNavbar(),
-  sections: [createDefaultHeroSection('split')],
+  sections: [],
   footer: createDefaultFooter(),
 });
 

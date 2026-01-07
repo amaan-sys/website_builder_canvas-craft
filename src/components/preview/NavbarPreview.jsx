@@ -40,13 +40,13 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
         const slug = link.href;
         let newPage = null;
         switch (slug) {
-          case '/features': newPage = createFeaturesPage(); break;
+          case '/about': newPage = createAboutPage(); break;
           case '/services': newPage = createServicesPage(); break;
           case '/pricing': newPage = createPricingPage(); break;
           case '/contact': newPage = createContactPage(); break;
           case '/start': newPage = createStartPage(); break;
           case '/templates': newPage = createTemplatesPage(); break;
-          case '/about': newPage = createAboutPage(); break;
+          case '/features': newPage = createFeaturesPage(); break;
           case '/blog': newPage = createBlogPage(); break;
           case '/careers': newPage = createCareersPage(); break;
           case '/help': newPage = createHelpPage(); break;
@@ -86,13 +86,13 @@ export function NavbarPreview({ config, isEditing, onUpdate }) {
       const slug = link.href;
       let newPage = null;
       switch (slug) {
-        case '/features': newPage = createFeaturesPage(); break;
+        case '/about': newPage = createAboutPage(); break;
         case '/services': newPage = createServicesPage(); break;
         case '/pricing': newPage = createPricingPage(); break;
         case '/contact': newPage = createContactPage(); break;
         case '/start': newPage = createStartPage(); break;
         case '/templates': newPage = createTemplatesPage(); break;
-        case '/about': newPage = createAboutPage(); break;
+        case '/features': newPage = createFeaturesPage(); break;
         case '/blog': newPage = createBlogPage(); break;
         case '/careers': newPage = createCareersPage(); break;
         case '/help': newPage = createHelpPage(); break;

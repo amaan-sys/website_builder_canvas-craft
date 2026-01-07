@@ -1,11 +1,11 @@
 import React from 'react';
 import { useBuilder } from '@/contexts/BuilderContext';
-import { Undo2, Redo2, Eye, Download, Play, Layout, Sidebar } from 'lucide-react';
+import { Undo2, Redo2, Eye, Download, Play, Layout, Sidebar, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-export function EditorToolbar() {
+export function EditorToolbar({ theme = 'light', onToggleTheme }) {
   const { state, undo, redo, canUndo, canRedo, setPreviewMode, setLeftPanelVisible, setRightPanelVisible } = useBuilder();
   const { editor, page } = state;
 
@@ -109,6 +109,23 @@ export function EditorToolbar() {
           </TooltipTrigger>
           <TooltipContent>Toggle Properties Panel</TooltipContent>
         </Tooltip>
+
+        {/* THEME TOGGLE */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onToggleTheme}
+              className={theme === 'dark' ? 'bg-primary/20 text-primary' : ''}
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>{theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}</TooltipContent>
+        </Tooltip>
+
+        <Separator orientation="vertical" className="h-6" />
 
         {/* PREVIEW */}
         <Tooltip>
